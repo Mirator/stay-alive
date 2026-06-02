@@ -110,7 +110,7 @@ public static class CodexUnityAutomation
         TestRunnerApi.SaveResultToFile(result, XmlResultPath);
 
         int total = result.PassCount + result.FailCount + result.SkipCount + result.InconclusiveCount;
-        bool passed = result.FailCount == 0 && result.InconclusiveCount == 0 && result.PassCount >= 5;
+        bool passed = result.FailCount == 0 && result.InconclusiveCount == 0 && result.PassCount >= 12;
         string summary = passed
             ? "Build completed and StayAlivePrototypeTests passed."
             : "Build completed but one or more StayAlivePrototypeTests failed.";

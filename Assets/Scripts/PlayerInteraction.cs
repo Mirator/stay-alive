@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(ResourceInventory))]
+[RequireComponent(typeof(CraftedInventory))]
 public sealed class PlayerInteraction : MonoBehaviour
 {
     [SerializeField] private float miningRange = 1.9f;
@@ -14,18 +15,18 @@ public sealed class PlayerInteraction : MonoBehaviour
     private bool paused;
 
     public ResourceInventory Inventory { get; private set; }
+    public CraftedInventory CraftedInventory { get; private set; }
 
     private void Awake()
     {
-        Inventory = GetComponent<ResourceInventory>();
-        controller = GetComponent<PlayerController2D>();
-        spriteAnimator = GetComponent<PlayerSpriteAnimator>();
+        EnsureCachedComponents();
     }
 
     private void Start()
     {
         mainCamera = Camera.main;
         UIController.Instance?.BindInventory(Inventory);
+        UIController.Instance?.BindCraftedInventory(CraftedInventory);
     }
 
     private void Update()
@@ -58,7 +59,7 @@ public sealed class PlayerInteraction : MonoBehaviour
 
         if (keyboard.qKey.wasPressedThisFrame)
         {
-            PlaceTorch();
+            TryPlaceTorch();
         }
 
         UpdateInteractionPrompt();
@@ -158,19 +159,33 @@ public sealed class PlayerInteraction : MonoBehaviour
         return best;
     }
 
-    private void PlaceTorch()
+    public bool TryPlaceTorch()
     {
+        EnsureCachedComponents();
+
         if (torchPrefab == null)
         {
             UIController.Instance?.ShowMessage("No torch prefab assigned.", 1.5f);
-            return;
+            return false;
+        }
+
+        if (CraftedInventory == null || !CraftedInventory.Spend(CraftedItemType.Torch, 1))
+        {
+            UIController.Instance?.ShowMessage("Craft a Torch at the Workbench first.", 1.8f);
+            return false;
         }
 
         Vector2 direction = controller != null ? controller.LastMoveDirection : Vector2.down;
+        if (direction.sqrMagnitude < 0.001f)
+        {
+            direction = Vector2.down;
+        }
+
         Vector3 position = transform.position + (Vector3)(direction.normalized * 0.7f);
         GameObject torch = Instantiate(torchPrefab, position, Quaternion.identity);
         torch.name = "Placed Torch";
         UIController.Instance?.ShowMessage("Torch placed.", 1.2f);
+        return true;
     }
 
     private void UpdateInteractionPrompt()
@@ -202,6 +217,29 @@ public sealed class PlayerInteraction : MonoBehaviour
         }
 
         return controller != null ? controller.LastMoveDirection : Vector2.down;
+    }
+
+    private void EnsureCachedComponents()
+    {
+        if (Inventory == null)
+        {
+            Inventory = GetComponent<ResourceInventory>();
+        }
+
+        if (CraftedInventory == null)
+        {
+            CraftedInventory = GetComponent<CraftedInventory>();
+        }
+
+        if (controller == null)
+        {
+            controller = GetComponent<PlayerController2D>();
+        }
+
+        if (spriteAnimator == null)
+        {
+            spriteAnimator = GetComponent<PlayerSpriteAnimator>();
+        }
     }
 
     private Vector2 GetMouseWorld()

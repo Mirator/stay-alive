@@ -1,0 +1,170 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(Collider2D))]
+public sealed class CraftingStation : MonoBehaviour, IInteractable
+{
+    [SerializeField] private int selectedRecipeIndex;
+
+    private static readonly CraftingRecipe[] Recipes =
+    {
+        new CraftingRecipe(
+            CraftedItemType.Torch,
+            new ResourceCost(ResourceType.RootFiber, 1)),
+        new CraftingRecipe(
+            CraftedItemType.StoneMarker,
+            new ResourceCost(ResourceType.Stone, 2)),
+        new CraftingRecipe(
+            CraftedItemType.CrystalKeyShard,
+            new ResourceCost(ResourceType.GlowCrystal, 1),
+            new ResourceCost(ResourceType.Stone, 1))
+    };
+
+    public CraftedItemType CurrentOutput => CurrentRecipe.Output;
+    public string Prompt => "Press E: craft " + CraftedInventory.Label(CurrentRecipe.Output) + " (" + CurrentRecipe.CostText + ")";
+
+    public void Interact(PlayerInteraction player)
+    {
+        ResourceInventory resourceInventory = player != null ? player.Inventory : null;
+        CraftedInventory craftedInventory = player != null ? player.CraftedInventory : null;
+
+        if (player != null)
+        {
+            if (resourceInventory == null)
+            {
+                resourceInventory = player.GetComponent<ResourceInventory>();
+            }
+
+            if (craftedInventory == null)
+            {
+                craftedInventory = player.GetComponent<CraftedInventory>();
+            }
+        }
+
+        if (resourceInventory == null || craftedInventory == null)
+        {
+            UIController.Instance?.ShowMessage("No inventory available for crafting.", 1.7f);
+            AdvanceRecipe();
+            return;
+        }
+
+        CraftingRecipe recipe = CurrentRecipe;
+        if (!CanAfford(resourceInventory, recipe, out string missingText))
+        {
+            UIController.Instance?.ShowMessage("Need " + missingText + " for " + CraftedInventory.Label(recipe.Output) + ".", 2f);
+            AdvanceRecipe();
+            return;
+        }
+
+        for (int i = 0; i < recipe.Costs.Length; i++)
+        {
+            ResourceCost cost = recipe.Costs[i];
+            resourceInventory.Spend(cost.Type, cost.Amount);
+        }
+
+        craftedInventory.Add(recipe.Output, 1);
+        UIController.Instance?.ShowMessage("Crafted " + CraftedInventory.Label(recipe.Output) + ".", 1.7f);
+        AdvanceRecipe();
+    }
+
+    public void SelectRecipe(CraftedItemType output)
+    {
+        for (int i = 0; i < Recipes.Length; i++)
+        {
+            if (Recipes[i].Output == output)
+            {
+                selectedRecipeIndex = i;
+                return;
+            }
+        }
+    }
+
+    private CraftingRecipe CurrentRecipe
+    {
+        get
+        {
+            if (selectedRecipeIndex < 0 || selectedRecipeIndex >= Recipes.Length)
+            {
+                selectedRecipeIndex = 0;
+            }
+
+            return Recipes[selectedRecipeIndex];
+        }
+    }
+
+    private void AdvanceRecipe()
+    {
+        selectedRecipeIndex = (selectedRecipeIndex + 1) % Recipes.Length;
+    }
+
+    private static bool CanAfford(ResourceInventory inventory, CraftingRecipe recipe, out string missingText)
+    {
+        List<string> missing = new List<string>();
+        for (int i = 0; i < recipe.Costs.Length; i++)
+        {
+            ResourceCost cost = recipe.Costs[i];
+            int have = inventory.Get(cost.Type);
+            if (have < cost.Amount)
+            {
+                missing.Add((cost.Amount - have) + " " + ResourceLabel(cost.Type));
+            }
+        }
+
+        missingText = string.Join(", ", missing);
+        return missing.Count == 0;
+    }
+
+    private static string ResourceLabel(ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.Dirt:
+                return "Dirt";
+            case ResourceType.Stone:
+                return "Stone";
+            case ResourceType.GlowCrystal:
+                return "Glow Crystal";
+            case ResourceType.RootFiber:
+                return "Root Fiber";
+            default:
+                return "Resource";
+        }
+    }
+
+    private readonly struct ResourceCost
+    {
+        public ResourceCost(ResourceType type, int amount)
+        {
+            Type = type;
+            Amount = Mathf.Max(1, amount);
+        }
+
+        public ResourceType Type { get; }
+        public int Amount { get; }
+    }
+
+    private sealed class CraftingRecipe
+    {
+        public CraftingRecipe(CraftedItemType output, params ResourceCost[] costs)
+        {
+            Output = output;
+            Costs = costs;
+            CostText = BuildCostText(costs);
+        }
+
+        public CraftedItemType Output { get; }
+        public ResourceCost[] Costs { get; }
+        public string CostText { get; }
+
+        private static string BuildCostText(ResourceCost[] costs)
+        {
+            string[] parts = new string[costs.Length];
+            for (int i = 0; i < costs.Length; i++)
+            {
+                parts[i] = costs[i].Amount + " " + ResourceLabel(costs[i].Type);
+            }
+
+            return string.Join(" + ", parts);
+        }
+    }
+}

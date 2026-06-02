@@ -6,11 +6,13 @@ public sealed class UIController : MonoBehaviour
     [SerializeField] private Text stoneText;
     [SerializeField] private Text glowCrystalText;
     [SerializeField] private Text rootFiberText;
+    [SerializeField] private Text craftedText;
     [SerializeField] private Text objectiveText;
     [SerializeField] private Text messageText;
     [SerializeField] private Text promptText;
 
     private ResourceInventory inventory;
+    private CraftedInventory craftedInventory;
     private float messageUntil;
 
     public static UIController Instance { get; private set; }
@@ -32,6 +34,11 @@ public sealed class UIController : MonoBehaviour
         if (inventory != null)
         {
             inventory.Changed -= RefreshInventory;
+        }
+
+        if (craftedInventory != null)
+        {
+            craftedInventory.Changed -= RefreshCraftedInventory;
         }
     }
 
@@ -58,6 +65,23 @@ public sealed class UIController : MonoBehaviour
         }
 
         RefreshInventory();
+    }
+
+    public void BindCraftedInventory(CraftedInventory newInventory)
+    {
+        if (craftedInventory != null)
+        {
+            craftedInventory.Changed -= RefreshCraftedInventory;
+        }
+
+        craftedInventory = newInventory;
+
+        if (craftedInventory != null)
+        {
+            craftedInventory.Changed += RefreshCraftedInventory;
+        }
+
+        RefreshCraftedInventory();
     }
 
     public void SetObjective(string text)
@@ -107,6 +131,18 @@ public sealed class UIController : MonoBehaviour
         if (rootFiberText != null)
         {
             rootFiberText.text = "Root Fiber: " + rootFiber;
+        }
+    }
+
+    private void RefreshCraftedInventory()
+    {
+        int torches = craftedInventory != null ? craftedInventory.Torches : 0;
+        int markers = craftedInventory != null ? craftedInventory.StoneMarkers : 0;
+        int shards = craftedInventory != null ? craftedInventory.CrystalKeyShards : 0;
+
+        if (craftedText != null)
+        {
+            craftedText.text = "Torches: " + torches + " | Markers: " + markers + " | Shards: " + shards;
         }
     }
 }

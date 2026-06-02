@@ -69,6 +69,7 @@ public static class StayAlivePrototypeBuilder
         sprites["chest"] = SaveSprite("chest", CreateChest(), SpritePpu, true);
         sprites["workbench"] = SaveSprite("workbench", CreateWorkbench(), SpritePpu, true);
         sprites["planks"] = SaveSprite("wooden_planks", CreatePlanks(), SpritePpu, true);
+        sprites["crawler"] = SaveSprite("cave_crawler", CreateCaveCrawler(), SpritePpu, true);
 
         sprites["playerIdleDown"] = SaveSprite("player_idle_down", CreatePlayerSprite(Facing.Down, 0, false), SpritePpu, true);
         sprites["playerIdleUp"] = SaveSprite("player_idle_up", CreatePlayerSprite(Facing.Up, 0, false), SpritePpu, true);
@@ -137,16 +138,19 @@ public static class StayAlivePrototypeBuilder
         GameObject props = new GameObject("Props and Interactables");
         props.transform.SetParent(root.transform);
         CreateDecorations(props.transform, sprites);
-        CreateMineables(props.transform, sprites);
-        CreateDoor(props.transform, sprites);
+        MineableResource firstBlocker = CreateMineables(props.transform, sprites);
+        AncientDoor ancientDoor = CreateDoor(props.transform, sprites);
+        RewardRoomGoal rewardGoal = CreateRewardGoal(props.transform);
         CreateConceptMural(props.transform);
 
         GameObject player = CreatePlayer(sprites, torchPrefab);
         player.transform.SetParent(root.transform);
+        CreateEnemy(props.transform, sprites, player.transform);
+        CreateGameLoop(root.transform, player.GetComponent<ResourceInventory>(), ancientDoor, firstBlocker, rewardGoal);
 
         CreateLights();
         CreateCamera(player.transform);
-        CreateUi(player.GetComponent<ResourceInventory>());
+        CreateUi(player.GetComponent<ResourceInventory>(), player.GetComponent<CraftedInventory>());
         CreateEventSystem();
 
         EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
@@ -201,7 +205,12 @@ public static class StayAlivePrototypeBuilder
         AddPointLight(parent.Find("Campfire"), "Campfire Light", new Color(1f, 0.42f, 0.16f), 2.4f, 4.2f, 0.8f);
 
         CreateProp("Old Chest", sprites["chest"], new Vector3(-9f, -4.2f, 0f), parent, 0.95f, true, "Press E to inspect chest", "Storage not implemented, but the chest smells usefully dusty.");
-        CreateProp("Workbench", sprites["workbench"], new Vector3(-11f, -4.4f, 0f), parent, 1.1f, true, "Press E to inspect workbench", "Crafting not implemented yet.");
+
+        GameObject workbench = CreateProp("Workbench", sprites["workbench"], new Vector3(-11f, -4.4f, 0f), parent, 1.1f, false, string.Empty, string.Empty);
+        CircleCollider2D workbenchCollider = workbench.AddComponent<CircleCollider2D>();
+        workbenchCollider.radius = 0.55f;
+        workbenchCollider.isTrigger = true;
+        workbench.AddComponent<CraftingStation>();
 
         CreateProp("Mushrooms A", sprites["mushroom"], new Vector3(-17f, 2.2f, 0f), parent, 0.75f, false, string.Empty, string.Empty);
         CreateProp("Mushrooms B", sprites["mushroom"], new Vector3(5.8f, -3.2f, 0f), parent, 0.85f, false, string.Empty, string.Empty);
@@ -212,9 +221,9 @@ public static class StayAlivePrototypeBuilder
         CreateProp("Reward Chest", sprites["chest"], new Vector3(14f, -4.9f, 0f), parent, 1.1f, true, "Press E to inspect reward", "You reached the reward room. Prototype complete.");
     }
 
-    private static void CreateMineables(Transform parent, Dictionary<string, Sprite> sprites)
+    private static MineableResource CreateMineables(Transform parent, Dictionary<string, Sprite> sprites)
     {
-        CreateMineable("Weak Stone Gate", sprites["rock"], new Vector3(-5.9f, 0f, 0f), parent, "Weak Stone", 1, ResourceType.Stone, 1, 0.95f);
+        MineableResource firstBlocker = CreateMineable("Weak Stone Gate", sprites["rock"], new Vector3(-5.9f, 0f, 0f), parent, "Weak Stone", 1, ResourceType.Stone, 1, 0.95f).GetComponent<MineableResource>();
         CreateMineable("Side Stone A", sprites["rock"], new Vector3(-6.6f, 1.35f, 0f), parent, "Stone Rock", 2, ResourceType.Stone, 1, 0.95f);
         CreateMineable("Side Dirt Mound", sprites["dirt"], new Vector3(-4.7f, -1.35f, 0f), parent, "Dirt Mound", 1, ResourceType.Dirt, 1, 0.85f);
         CreateMineable("Root Blockage", sprites["root"], new Vector3(4.6f, -2.35f, 0f), parent, "Root Blockage", 2, ResourceType.RootFiber, 1, 0.95f);
@@ -222,6 +231,7 @@ public static class StayAlivePrototypeBuilder
         CreateCrystal("Crystal Node A", sprites["crystal"], new Vector3(1f, 1.7f, 0f), parent);
         CreateCrystal("Crystal Node B", sprites["crystal"], new Vector3(3.2f, 1.1f, 0f), parent);
         CreateCrystal("Crystal Node C", sprites["crystal"], new Vector3(2.2f, -1.9f, 0f), parent);
+        return firstBlocker;
     }
 
     private static void CreatePathTorch(string name, Sprite sprite, Vector3 position, Transform parent)
@@ -236,7 +246,7 @@ public static class StayAlivePrototypeBuilder
         AddPointLight(crystal.transform, "Crystal Glow", new Color(0.25f, 0.85f, 1f), 1.4f, 3.2f, 0.55f);
     }
 
-    private static void CreateDoor(Transform parent, Dictionary<string, Sprite> sprites)
+    private static AncientDoor CreateDoor(Transform parent, Dictionary<string, Sprite> sprites)
     {
         GameObject door = CreateSpriteObject("Ancient Door", sprites["doorClosed"], new Vector3(8.25f, 0f, 0f), SortFromY(0f, 40), parent);
         door.transform.localScale = new Vector3(1.35f, 3.15f, 1f);
@@ -245,6 +255,49 @@ public static class StayAlivePrototypeBuilder
         AncientDoor ancientDoor = door.AddComponent<AncientDoor>();
         ancientDoor.Configure(ResourceType.GlowCrystal, 3, sprites["doorOpen"]);
         AddPointLight(door.transform, "Door Seal Glow", new Color(0.2f, 0.75f, 1f), 0.8f, 2.2f, 0.2f);
+        return ancientDoor;
+    }
+
+    private static RewardRoomGoal CreateRewardGoal(Transform parent)
+    {
+        GameObject goal = new GameObject("Reward Room Goal");
+        goal.transform.position = new Vector3(14f, -4.3f, 0f);
+        goal.transform.SetParent(parent);
+        CircleCollider2D collider = goal.AddComponent<CircleCollider2D>();
+        collider.radius = 1.15f;
+        collider.isTrigger = true;
+        RewardRoomGoal rewardGoal = goal.AddComponent<RewardRoomGoal>();
+        AddPointLight(goal.transform, "Reward Glow", new Color(0.95f, 0.72f, 0.25f), 1.15f, 2.3f, 0.45f);
+        return rewardGoal;
+    }
+
+    private static void CreateGameLoop(Transform parent, ResourceInventory inventory, AncientDoor door, MineableResource firstBlocker, RewardRoomGoal rewardGoal)
+    {
+        GameObject loopObject = new GameObject("Core Game Loop");
+        loopObject.transform.SetParent(parent);
+        GameLoopController loop = loopObject.AddComponent<GameLoopController>();
+        loop.Configure(inventory, door, firstBlocker, rewardGoal);
+        EditorUtility.SetDirty(loop);
+    }
+
+    private static CaveCrawlerEnemy CreateEnemy(Transform parent, Dictionary<string, Sprite> sprites, Transform player)
+    {
+        GameObject enemy = CreateSpriteObject("Cave Crawler", sprites["crawler"], new Vector3(5.8f, -1.45f, 0f), SortFromY(-1.45f, 30), parent);
+        enemy.transform.localScale = Vector3.one * 0.9f;
+
+        Rigidbody2D body = enemy.AddComponent<Rigidbody2D>();
+        body.gravityScale = 0f;
+        body.freezeRotation = true;
+        body.bodyType = RigidbodyType2D.Kinematic;
+
+        CircleCollider2D collider = enemy.AddComponent<CircleCollider2D>();
+        collider.radius = 0.42f;
+        collider.isTrigger = true;
+
+        CaveCrawlerEnemy crawler = enemy.AddComponent<CaveCrawlerEnemy>();
+        crawler.Configure(player, enemy.transform.position);
+        EditorUtility.SetDirty(crawler);
+        return crawler;
     }
 
     private static void CreateConceptMural(Transform parent)
@@ -278,7 +331,9 @@ public static class StayAlivePrototypeBuilder
         collider.offset = new Vector2(0f, -0.12f);
 
         player.AddComponent<ResourceInventory>();
+        player.AddComponent<CraftedInventory>();
         player.AddComponent<PlayerController2D>();
+        player.AddComponent<PlayerKnockback>();
         PlayerSpriteAnimator animator = player.AddComponent<PlayerSpriteAnimator>();
         AssignPlayerSprites(animator, sprites);
 
@@ -337,7 +392,7 @@ public static class StayAlivePrototypeBuilder
         EditorUtility.SetDirty(follow);
     }
 
-    private static void CreateUi(ResourceInventory inventory)
+    private static void CreateUi(ResourceInventory inventory, CraftedInventory craftedInventory)
     {
         GameObject canvasObject = new GameObject("Prototype UI");
         Canvas canvas = canvasObject.AddComponent<Canvas>();
@@ -356,6 +411,7 @@ public static class StayAlivePrototypeBuilder
         Text stone = CreateUiText("Stone Counter", canvasObject.transform, font, "Stone: 0", new Vector2(18f, -18f), new Vector2(260f, 26f), 21, TextAnchor.UpperLeft, new Color(0.9f, 0.86f, 0.75f));
         Text crystal = CreateUiText("Crystal Counter", canvasObject.transform, font, "Glow Crystal: 0", new Vector2(18f, -46f), new Vector2(300f, 26f), 21, TextAnchor.UpperLeft, new Color(0.65f, 0.92f, 1f));
         Text root = CreateUiText("Root Counter", canvasObject.transform, font, "Root Fiber: 0", new Vector2(18f, -74f), new Vector2(300f, 26f), 21, TextAnchor.UpperLeft, new Color(0.74f, 0.93f, 0.66f));
+        Text crafted = CreateUiText("Crafted Counter", canvasObject.transform, font, "Torches: 0 | Markers: 0 | Shards: 0", new Vector2(18f, -102f), new Vector2(420f, 26f), 20, TextAnchor.UpperLeft, new Color(1f, 0.72f, 0.42f));
         Text objective = CreateUiText("Objective", canvasObject.transform, font, "Find 3 Glow Crystals and open the sealed door.", new Vector2(0f, -18f), new Vector2(720f, 34f), 21, TextAnchor.UpperCenter, new Color(1f, 0.9f, 0.68f));
         ConfigureTopCenter(objective.rectTransform);
 
@@ -370,12 +426,14 @@ public static class StayAlivePrototypeBuilder
         serialized.FindProperty("stoneText").objectReferenceValue = stone;
         serialized.FindProperty("glowCrystalText").objectReferenceValue = crystal;
         serialized.FindProperty("rootFiberText").objectReferenceValue = root;
+        serialized.FindProperty("craftedText").objectReferenceValue = crafted;
         serialized.FindProperty("objectiveText").objectReferenceValue = objective;
         serialized.FindProperty("messageText").objectReferenceValue = message;
         serialized.FindProperty("promptText").objectReferenceValue = prompt;
         serialized.ApplyModifiedPropertiesWithoutUndo();
 
         controller.BindInventory(inventory);
+        controller.BindCraftedInventory(craftedInventory);
         controller.SetObjective("Find 3 Glow Crystals and open the sealed door.");
     }
 
@@ -767,6 +825,25 @@ public static class StayAlivePrototypeBuilder
         FillRect(texture, 43, 16, 48, 31, new Color(0.26f, 0.14f, 0.07f, 1f));
         DrawLine(texture, 20, 42, 43, 49, new Color(0.68f, 0.48f, 0.28f, 1f), 3);
         FillEllipse(texture, 42, 47, 4, 4, new Color(0.48f, 0.48f, 0.46f, 1f));
+        return texture;
+    }
+
+    private static Texture2D CreateCaveCrawler()
+    {
+        Texture2D texture = NewTexture(64, 64, Color.clear);
+        FillEllipse(texture, 32, 11, 20, 5, new Color(0f, 0f, 0f, 0.28f));
+        FillEllipse(texture, 32, 30, 18, 13, new Color(0.08f, 0.1f, 0.1f, 1f));
+        FillEllipse(texture, 23, 33, 11, 9, new Color(0.13f, 0.16f, 0.15f, 1f));
+        FillEllipse(texture, 42, 30, 13, 10, new Color(0.05f, 0.07f, 0.07f, 1f));
+        FillEllipse(texture, 25, 37, 3, 3, new Color(0.95f, 0.36f, 0.12f, 1f));
+        FillEllipse(texture, 36, 38, 3, 3, new Color(0.95f, 0.36f, 0.12f, 1f));
+        DrawLine(texture, 17, 29, 4, 21, new Color(0.04f, 0.05f, 0.05f, 1f), 3);
+        DrawLine(texture, 20, 22, 7, 16, new Color(0.04f, 0.05f, 0.05f, 1f), 3);
+        DrawLine(texture, 46, 28, 60, 21, new Color(0.04f, 0.05f, 0.05f, 1f), 3);
+        DrawLine(texture, 43, 21, 57, 15, new Color(0.04f, 0.05f, 0.05f, 1f), 3);
+        DrawLine(texture, 22, 42, 10, 52, new Color(0.04f, 0.05f, 0.05f, 1f), 3);
+        DrawLine(texture, 42, 41, 55, 50, new Color(0.04f, 0.05f, 0.05f, 1f), 3);
+        DrawLine(texture, 20, 31, 41, 26, new Color(0.22f, 0.28f, 0.25f, 0.45f), 2);
         return texture;
     }
 
