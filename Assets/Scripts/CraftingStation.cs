@@ -9,6 +9,28 @@ public sealed class CraftingStation : MonoBehaviour, IInteractable
     private static readonly CraftingRecipe[] Recipes =
     {
         new CraftingRecipe(
+            CraftedItemType.StoneSpear,
+            new ResourceCost(ResourceType.Wood, 2),
+            new ResourceCost(ResourceType.Stone, 1)),
+        new CraftingRecipe(
+            CraftedItemType.Bandage,
+            new ResourceCost(ResourceType.Herbs, 2)),
+        new CraftingRecipe(
+            CraftedItemType.Campfire,
+            new ResourceCost(ResourceType.Wood, 3),
+            new ResourceCost(ResourceType.Stone, 1)),
+        new CraftingRecipe(
+            CraftedItemType.Bedroll,
+            new ResourceCost(ResourceType.Wood, 4),
+            new ResourceCost(ResourceType.Herbs, 2)),
+        new CraftingRecipe(
+            CraftedItemType.StorageBox,
+            new ResourceCost(ResourceType.Wood, 6)),
+        new CraftingRecipe(
+            CraftedItemType.Workbench,
+            new ResourceCost(ResourceType.Wood, 5),
+            new ResourceCost(ResourceType.Stone, 2)),
+        new CraftingRecipe(
             CraftedItemType.Torch,
             new ResourceCost(ResourceType.RootFiber, 1)),
         new CraftingRecipe(
@@ -126,6 +148,12 @@ public sealed class CraftingStation : MonoBehaviour, IInteractable
                 return "Glow Crystal";
             case ResourceType.RootFiber:
                 return "Root Fiber";
+            case ResourceType.Wood:
+                return "Wood";
+            case ResourceType.Food:
+                return "Food";
+            case ResourceType.Herbs:
+                return "Herbs";
             default:
                 return "Resource";
         }

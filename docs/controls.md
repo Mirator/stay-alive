@@ -1,4 +1,4 @@
-# SPEC-002: Controls
+# 2. SPEC-002: Controls
 
 Status: Implemented
 
@@ -8,7 +8,7 @@ Define the keyboard and mouse controls for the proof of concept.
 
 ## Requirements
 
-### CTL-001: Movement
+### 2.1 CTL-001: Movement
 
 The player MUST move with `WASD`.
 
@@ -20,7 +20,7 @@ Acceptance criteria:
 - `D` moves right.
 - Diagonal movement is normalized.
 
-### CTL-002: Mining
+### 2.2 CTL-002: Mining
 
 The player MUST mine with left mouse button.
 
@@ -30,7 +30,7 @@ Acceptance criteria:
 - A reachable mineable can receive a hit.
 - Target selection is forgiving and biased by mouse aim.
 
-### CTL-003: Interaction
+### 2.3 CTL-003: Interaction
 
 The player MUST interact with nearby objects using `E`.
 
@@ -40,7 +40,7 @@ Acceptance criteria:
 - Pressing `E` invokes the nearest interactable.
 - Ancient Door interaction uses the inventory requirement from SPEC-001.
 
-### CTL-004: Torch Placement
+### 2.4 CTL-004: Torch Placement
 
 The player SHOULD be able to place crafted torches with `Q`.
 
@@ -52,7 +52,7 @@ Acceptance criteria:
 - Placed torches emit warm light.
 - Torches do not block movement.
 
-### CTL-005: Pause
+### 2.5 CTL-005: Pause
 
 The player MUST toggle pause with `Esc`.
 

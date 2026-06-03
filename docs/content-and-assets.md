@@ -1,4 +1,4 @@
-# SPEC-004: Content And Assets
+# 4. SPEC-004: Content And Assets
 
 Status: Implemented
 
@@ -8,7 +8,7 @@ Define the content, generated assets, and map readability rules for the proof of
 
 ## Requirements
 
-### ART-001: Generated Asset Location
+### 4.1 ART-001: Generated Asset Location
 
 Generated art MUST live under `Assets/Art/Generated`.
 
@@ -18,7 +18,7 @@ Acceptance criteria:
 - Sprite PNGs exist under `Assets/Art/Generated/Sprites`.
 - Generated sprite material exists at `Assets/Art/Generated/SpriteLitGenerated.mat`.
 
-### ART-002: Required Sprite Set
+### 4.2 ART-002: Required Sprite Set
 
 The builder MUST generate sprites for the current prototype objects.
 
@@ -37,7 +37,7 @@ Required sprite categories:
 - Wooden planks.
 - Cave crawler.
 
-### ART-003: Torch Prefab
+### 4.3 ART-003: Torch Prefab
 
 The project MUST include a torch prefab.
 
@@ -47,7 +47,7 @@ Acceptance criteria:
 - The prefab has a sprite renderer.
 - The prefab has a warm `Light2D`.
 
-### MAP-001: Handcrafted Map
+### 4.4 MAP-001: Handcrafted Map
 
 The prototype map MUST be handcrafted, not procedural.
 
@@ -60,7 +60,7 @@ Acceptance criteria:
 - The scene contains named progression objects along this route.
 - The route can be validated by edit-mode tests.
 
-### MAP-002: Readability
+### 4.5 MAP-002: Readability
 
 The critical path MUST be readable and not look like an accidental collision trap.
 

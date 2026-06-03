@@ -1,4 +1,4 @@
-# SPEC-003: Runtime Systems
+# 3. SPEC-003: Runtime Systems
 
 Status: Implemented
 
@@ -8,7 +8,7 @@ Define the runtime scripts and editor systems that support the proof-of-concept 
 
 ## Requirements
 
-### SYS-001: Scene Generation
+### 3.1 SYS-001: Scene Generation
 
 The project MUST generate the playable scene from editor code.
 
@@ -18,7 +18,7 @@ Acceptance criteria:
 - The builder creates player, cave, mineables, door, reward goal, crafting station, enemy, UI, lights, camera, and core loop objects.
 - Regeneration is deterministic enough for tests to inspect named objects.
 
-### SYS-002: Core Loop Controller
+### 3.2 SYS-002: Core Loop Controller
 
 The project MUST have a single controller for objective progression.
 
@@ -28,7 +28,7 @@ Acceptance criteria:
 - It updates objective text through `UIController`.
 - It can complete the run through `CompleteRun`.
 
-### SYS-003: Reward Goal
+### 3.3 SYS-003: Reward Goal
 
 The project MUST have a trigger-based reward-room completion object.
 
@@ -37,7 +37,7 @@ Acceptance criteria:
 - `RewardRoomGoal` requires a trigger collider.
 - It completes the loop when the player enters.
 
-### SYS-004: Inventory
+### 3.4 SYS-004: Inventory
 
 The inventory MUST store prototype resource counts.
 
@@ -54,7 +54,7 @@ Acceptance criteria:
 - `Changed` fires when resource counts change.
 - Door and UI can read resource state.
 
-### SYS-005: Mining
+### 3.5 SYS-005: Mining
 
 Mineable objects MUST define durability, resource type, and reward amount.
 
@@ -64,7 +64,7 @@ Acceptance criteria:
 - Reaching zero durability disables the object.
 - Reward resources are added directly to inventory.
 
-### SYS-006: Door Interaction
+### 3.6 SYS-006: Door Interaction
 
 The Ancient Door MUST implement `IInteractable`.
 
@@ -74,7 +74,7 @@ Acceptance criteria:
 - It opens by disabling its blocking collider.
 - It exposes `IsOpen`.
 
-### SYS-007: UI
+### 3.7 SYS-007: UI
 
 The UI MUST display resource counts, crafted item counts, objective text, prompts, and temporary messages.
 
@@ -85,7 +85,7 @@ Acceptance criteria:
 - Counters refresh when inventory changes.
 - Objective text can be set by systems.
 
-### SYS-008: Crafting
+### 3.8 SYS-008: Crafting
 
 The runtime MUST support a minimal Workbench crafting system.
 
@@ -95,7 +95,7 @@ Acceptance criteria:
 - `CraftedInventory` stores crafted Torches, Stone Markers, and Crystal Key Shards.
 - Crafting checks all costs before spending any resource.
 
-### SYS-009: Enemies
+### 3.9 SYS-009: Enemies
 
 The runtime MUST support the first Cave Crawler enemy.
 
@@ -105,7 +105,7 @@ Acceptance criteria:
 - `PlayerKnockback` implements the single first-pass contact consequence.
 - Enemy colliders are triggers so the critical path is not physically blocked.
 
-### SYS-010: Editor Automation
+### 3.10 SYS-010: Editor Automation
 
 The project SHOULD support automated scene rebuild and edit-mode verification.
 

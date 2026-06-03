@@ -7,6 +7,9 @@ public sealed class ResourceInventory : MonoBehaviour
     [SerializeField] private int stone;
     [SerializeField] private int glowCrystal;
     [SerializeField] private int rootFiber;
+    [SerializeField] private int wood;
+    [SerializeField] private int food;
+    [SerializeField] private int herbs;
 
     public event Action Changed;
 
@@ -14,6 +17,9 @@ public sealed class ResourceInventory : MonoBehaviour
     public int Stone => stone;
     public int GlowCrystal => glowCrystal;
     public int RootFiber => rootFiber;
+    public int Wood => wood;
+    public int Food => food;
+    public int Herbs => herbs;
 
     public int Get(ResourceType type)
     {
@@ -27,6 +33,12 @@ public sealed class ResourceInventory : MonoBehaviour
                 return glowCrystal;
             case ResourceType.RootFiber:
                 return rootFiber;
+            case ResourceType.Wood:
+                return wood;
+            case ResourceType.Food:
+                return food;
+            case ResourceType.Herbs:
+                return herbs;
             default:
                 return 0;
         }
@@ -60,6 +72,24 @@ public sealed class ResourceInventory : MonoBehaviour
         return true;
     }
 
+    public void Set(ResourceType type, int amount)
+    {
+        SetSilently(type, amount);
+        Changed?.Invoke();
+    }
+
+    public void ClearAll()
+    {
+        dirt = 0;
+        stone = 0;
+        glowCrystal = 0;
+        rootFiber = 0;
+        wood = 0;
+        food = 0;
+        herbs = 0;
+        Changed?.Invoke();
+    }
+
     private void SetSilently(ResourceType type, int value)
     {
         switch (type)
@@ -75,6 +105,15 @@ public sealed class ResourceInventory : MonoBehaviour
                 break;
             case ResourceType.RootFiber:
                 rootFiber = Mathf.Max(0, value);
+                break;
+            case ResourceType.Wood:
+                wood = Mathf.Max(0, value);
+                break;
+            case ResourceType.Food:
+                food = Mathf.Max(0, value);
+                break;
+            case ResourceType.Herbs:
+                herbs = Mathf.Max(0, value);
                 break;
         }
     }

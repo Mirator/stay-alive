@@ -11,6 +11,9 @@ public sealed class PlayerInteraction : MonoBehaviour
 
     private PlayerController2D controller;
     private PlayerSpriteAnimator spriteAnimator;
+    private MeleeWeapon meleeWeapon;
+    private GridBuildingSystem buildingSystem;
+    private PlayerVitals vitals;
     private Camera mainCamera;
     private bool paused;
 
@@ -49,7 +52,7 @@ public sealed class PlayerInteraction : MonoBehaviour
 
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
-            TryMine();
+            TryPrimaryAction();
         }
 
         if (keyboard.eKey.wasPressedThisFrame)
@@ -62,12 +65,34 @@ public sealed class PlayerInteraction : MonoBehaviour
             TryPlaceTorch();
         }
 
+        if (keyboard.fKey.wasPressedThisFrame)
+        {
+            TryEatFood();
+        }
+
+        if (keyboard.hKey.wasPressedThisFrame)
+        {
+            TryUseBandage();
+        }
+
         UpdateInteractionPrompt();
     }
 
     public void AssignTorchPrefab(GameObject prefab)
     {
         torchPrefab = prefab;
+    }
+
+    private void TryPrimaryAction()
+    {
+        EnsureCachedComponents();
+        if (meleeWeapon != null && meleeWeapon.TryAttack(GetAimDirection()))
+        {
+            spriteAnimator?.PlayMine(GetAimDirection());
+            return;
+        }
+
+        TryMine();
     }
 
     private void TryMine()
@@ -188,6 +213,30 @@ public sealed class PlayerInteraction : MonoBehaviour
         return true;
     }
 
+    public bool TryEatFood()
+    {
+        EnsureCachedComponents();
+        if (vitals != null && vitals.EatFood(Inventory))
+        {
+            return true;
+        }
+
+        UIController.Instance?.ShowMessage("No food to eat.", 1.2f);
+        return false;
+    }
+
+    public bool TryUseBandage()
+    {
+        EnsureCachedComponents();
+        if (vitals != null && vitals.UseBandage(CraftedInventory))
+        {
+            return true;
+        }
+
+        UIController.Instance?.ShowMessage("No bandage to use.", 1.2f);
+        return false;
+    }
+
     private void UpdateInteractionPrompt()
     {
         IInteractable interactable = FindNearestInteractable();
@@ -205,7 +254,7 @@ public sealed class PlayerInteraction : MonoBehaviour
         paused = !paused;
         Time.timeScale = paused ? 0f : 1f;
         UIController.Instance?.SetPrompt(string.Empty, false);
-        UIController.Instance?.ShowMessage(paused ? "Paused" : "Back to the cave.", 1.2f);
+        UIController.Instance?.ShowMessage(paused ? "Paused" : "Back to the wild.", 1.2f);
     }
 
     private Vector2 GetAimDirection()
@@ -239,6 +288,21 @@ public sealed class PlayerInteraction : MonoBehaviour
         if (spriteAnimator == null)
         {
             spriteAnimator = GetComponent<PlayerSpriteAnimator>();
+        }
+
+        if (meleeWeapon == null)
+        {
+            meleeWeapon = GetComponent<MeleeWeapon>();
+        }
+
+        if (buildingSystem == null)
+        {
+            buildingSystem = GetComponent<GridBuildingSystem>();
+        }
+
+        if (vitals == null)
+        {
+            vitals = GetComponent<PlayerVitals>();
         }
     }
 

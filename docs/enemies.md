@@ -1,4 +1,4 @@
-# SPEC-007: Enemies
+# 7. SPEC-007: Enemies
 
 Status: Implemented
 
@@ -14,7 +14,7 @@ Does light, movement, and spatial pressure make cave exploration more exciting w
 
 ## Requirements
 
-### ENEMY-001: First Enemy Type
+### 7.1 ENEMY-001: First Enemy Type
 
 The first enemy MUST be a simple cave crawler.
 
@@ -25,7 +25,7 @@ Behavior:
 - Move toward the player slowly.
 - Stop or retreat near strong light.
 
-### ENEMY-002: Spawn Placement
+### 7.2 ENEMY-002: Spawn Placement
 
 Enemies MUST be placed outside the initial safe room.
 
@@ -35,7 +35,7 @@ Acceptance criteria:
 - The first enemy appears after the player reaches or passes the crystal chamber.
 - Enemy placement must not block the required critical path.
 
-### ENEMY-003: Player Consequence
+### 7.3 ENEMY-003: Player Consequence
 
 Enemy contact SHOULD create a light survival consequence.
 
@@ -49,7 +49,7 @@ The first implementation MUST choose only one consequence.
 
 Implemented consequence: knock player back.
 
-### ENEMY-004: Light Interaction
+### 7.4 ENEMY-004: Light Interaction
 
 Enemies SHOULD react to player-placed torches or campfire light.
 
@@ -58,7 +58,7 @@ Acceptance criteria:
 - Enemy aggression decreases near warm light.
 - Torches create a useful defensive choice.
 
-### ENEMY-005: Combat Scope
+### 7.5 ENEMY-005: Combat Scope
 
 The first enemy pass MAY allow mining swing damage, but combat depth is optional.
 

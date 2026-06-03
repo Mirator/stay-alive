@@ -1,4 +1,4 @@
-# SPEC-005: Testing And Verification
+# 5. SPEC-005: Testing And Verification
 
 Status: Implemented
 
@@ -8,7 +8,7 @@ Define the evidence required to prove the current prototype works.
 
 ## Requirements
 
-### TEST-001: Edit-Mode Test Fixture
+### 5.1 TEST-001: Edit-Mode Test Fixture
 
 The project MUST keep verification tests in `Assets/Editor/StayAlivePrototypeTests.cs`.
 
@@ -17,7 +17,7 @@ Acceptance criteria:
 - Tests are discoverable by Unity Edit Mode Test Runner.
 - Tests run without requiring Play Mode.
 
-### TEST-002: Scene Content Verification
+### 5.2 TEST-002: Scene Content Verification
 
 Tests MUST verify generated scene content.
 
@@ -28,7 +28,7 @@ Acceptance criteria:
 - Mineables, crystals, door, and lights exist.
 - Crafting and enemy systems exist in the generated scene.
 
-### TEST-003: Loop Behavior Verification
+### 5.3 TEST-003: Loop Behavior Verification
 
 Tests MUST verify the core loop behavior.
 
@@ -38,7 +38,7 @@ Acceptance criteria:
 - Ancient Door requires 3 Glow Crystals.
 - Core loop progresses through mining, crystal collection, door opening, reward-room entry, and completion.
 
-### TEST-004: Path Regression Verification
+### 5.4 TEST-004: Path Regression Verification
 
 Tests MUST verify that the critical path is walkable after required blockers are cleared.
 
@@ -47,7 +47,7 @@ Acceptance criteria:
 - The route from spawn to reward room is sampled with player collision radius.
 - Blocking colliders on the sampled route fail the test.
 
-### TEST-005: Automation Report
+### 5.5 TEST-005: Automation Report
 
 Automation SHOULD write machine-readable reports.
 
@@ -57,7 +57,7 @@ Acceptance criteria:
 - `Logs/codex-unity-test-results.xml` is written.
 - JSON `success` is true only if the required test count passes with zero failures.
 
-### TEST-006: Crafting And Enemy Verification
+### 5.6 TEST-006: Crafting And Enemy Verification
 
 Tests MUST verify the implemented SPEC-006 and SPEC-007 behavior.
 

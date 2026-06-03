@@ -73,7 +73,7 @@ public static class CodexUnityAutomation
 
         try
         {
-            StayAlivePrototypeBuilder.BuildProofOfConcept();
+            StayAliveMvpBuilder.BuildMvp();
             RunEditModeTests();
         }
         catch (Exception exception)
@@ -110,10 +110,10 @@ public static class CodexUnityAutomation
         TestRunnerApi.SaveResultToFile(result, XmlResultPath);
 
         int total = result.PassCount + result.FailCount + result.SkipCount + result.InconclusiveCount;
-        bool passed = result.FailCount == 0 && result.InconclusiveCount == 0 && result.PassCount >= 12;
+        bool passed = result.FailCount == 0 && result.InconclusiveCount == 0 && result.PassCount >= 13;
         string summary = passed
-            ? "Build completed and StayAlivePrototypeTests passed."
-            : "Build completed but one or more StayAlivePrototypeTests failed.";
+            ? "MVP build completed and StayAlivePrototypeTests passed."
+            : "MVP build completed but one or more StayAlivePrototypeTests failed.";
 
         WriteJsonResult(
             passed,

@@ -1,4 +1,4 @@
-# SPEC-001: Core Game Loop
+# 1. SPEC-001: Core Game Loop
 
 Status: Implemented
 
@@ -8,7 +8,7 @@ Define the playable vertical slice that proves Stay Alive can support exploratio
 
 ## Requirements
 
-### CL-001: Spawn
+### 1.1 CL-001: Spawn
 
 The player MUST spawn in a safe cave room near a campfire.
 
@@ -18,7 +18,7 @@ Acceptance criteria:
 - The scene contains `Campfire`.
 - The camera follows the player at scene start.
 
-### CL-002: Objective Stages
+### 1.2 CL-002: Objective Stages
 
 The loop MUST progress through these stages:
 
@@ -33,7 +33,7 @@ Acceptance criteria:
 - `GameLoopController.CurrentStage` exposes the active stage.
 - Objective UI changes when stage transitions occur.
 
-### CL-003: First Mining Gate
+### 1.3 CL-003: First Mining Gate
 
 The first progression blocker MUST be a clearly named weak mineable object.
 
@@ -43,7 +43,7 @@ Acceptance criteria:
 - The gate breaks in one hit.
 - Breaking or disabling the gate advances the loop to `CollectGlowCrystals`.
 
-### CL-004: Crystal Collection
+### 1.4 CL-004: Crystal Collection
 
 The player MUST collect 3 Glow Crystals before opening the Ancient Door.
 
@@ -53,7 +53,7 @@ Acceptance criteria:
 - Each crystal node rewards `GlowCrystal`.
 - The objective UI shows crystal collection progress.
 
-### CL-005: Ancient Door
+### 1.5 CL-005: Ancient Door
 
 The Ancient Door MUST require 3 Glow Crystals and open through interaction.
 
@@ -63,7 +63,7 @@ Acceptance criteria:
 - The door opens once the player has 3 Glow Crystals and interacts with it.
 - Opening the door disables its blocking collider.
 
-### CL-006: Reward Room Completion
+### 1.6 CL-006: Reward Room Completion
 
 The run MUST complete when the player enters the reward room.
 
@@ -73,7 +73,7 @@ Acceptance criteria:
 - Entering the trigger calls `GameLoopController.CompleteRun`.
 - Completion updates objective text and displays a completion message.
 
-### CL-007: Critical Path Passability
+### 1.7 CL-007: Critical Path Passability
 
 The critical route MUST remain physically walkable after required blockers are cleared.
 

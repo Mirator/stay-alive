@@ -3,5 +3,8 @@ public enum ResourceType
     Dirt,
     Stone,
     GlowCrystal,
-    RootFiber
+    RootFiber,
+    Wood,
+    Food,
+    Herbs
 }

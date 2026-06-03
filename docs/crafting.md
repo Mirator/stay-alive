@@ -1,4 +1,4 @@
-# SPEC-006: Crafting
+# 6. SPEC-006: Crafting
 
 Status: Implemented
 
@@ -14,7 +14,7 @@ Can gathered cave resources become useful survival tools while keeping the proto
 
 ## Requirements
 
-### CRAFT-001: Crafting Entry Point
+### 6.1 CRAFT-001: Crafting Entry Point
 
 Crafting MUST happen at a Workbench.
 
@@ -24,7 +24,7 @@ Acceptance criteria:
 - Pressing `E` opens or cycles a simple crafting interaction.
 - Crafting is unavailable when the player is out of range.
 
-### CRAFT-002: Initial Recipes
+### 6.2 CRAFT-002: Initial Recipes
 
 The first implementation MUST include a small recipe set.
 
@@ -36,7 +36,7 @@ Required recipes:
 | Stone Marker | 2 Stone | Marks explored routes. |
 | Crystal Key Shard | 1 Glow Crystal + 1 Stone | Door/key progression test item. |
 
-### CRAFT-003: Resource Costs
+### 6.3 CRAFT-003: Resource Costs
 
 Crafting MUST consume resources only when the craft succeeds.
 
@@ -46,7 +46,7 @@ Acceptance criteria:
 - Successful craft subtracts cost.
 - Successful craft adds the crafted item or places it immediately, depending on recipe.
 
-### CRAFT-004: UI Scope
+### 6.4 CRAFT-004: UI Scope
 
 The first crafting UI SHOULD be minimal.
 
@@ -56,7 +56,7 @@ Acceptance criteria:
 - No drag-and-drop.
 - A simple list, cycling selection, or direct interaction menu is acceptable.
 
-### CRAFT-005: Torch Integration
+### 6.5 CRAFT-005: Torch Integration
 
 Torch crafting SHOULD replace unlimited torch placement.
 

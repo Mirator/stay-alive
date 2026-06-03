@@ -7,12 +7,17 @@ public sealed class UIController : MonoBehaviour
     [SerializeField] private Text glowCrystalText;
     [SerializeField] private Text rootFiberText;
     [SerializeField] private Text craftedText;
+    [SerializeField] private Text vitalsText;
+    [SerializeField] private Text dayText;
     [SerializeField] private Text objectiveText;
     [SerializeField] private Text messageText;
     [SerializeField] private Text promptText;
+    [SerializeField] private GameObject deathPanel;
 
     private ResourceInventory inventory;
     private CraftedInventory craftedInventory;
+    private PlayerVitals vitals;
+    private DayNightCycle dayNightCycle;
     private float messageUntil;
 
     public static UIController Instance { get; private set; }
@@ -39,6 +44,16 @@ public sealed class UIController : MonoBehaviour
         if (craftedInventory != null)
         {
             craftedInventory.Changed -= RefreshCraftedInventory;
+        }
+
+        if (vitals != null)
+        {
+            vitals.Changed -= RefreshVitals;
+        }
+
+        if (dayNightCycle != null)
+        {
+            dayNightCycle.Changed -= RefreshDay;
         }
     }
 
@@ -84,6 +99,40 @@ public sealed class UIController : MonoBehaviour
         RefreshCraftedInventory();
     }
 
+    public void BindVitals(PlayerVitals newVitals)
+    {
+        if (vitals != null)
+        {
+            vitals.Changed -= RefreshVitals;
+        }
+
+        vitals = newVitals;
+
+        if (vitals != null)
+        {
+            vitals.Changed += RefreshVitals;
+        }
+
+        RefreshVitals();
+    }
+
+    public void BindDayNightCycle(DayNightCycle cycle)
+    {
+        if (dayNightCycle != null)
+        {
+            dayNightCycle.Changed -= RefreshDay;
+        }
+
+        dayNightCycle = cycle;
+
+        if (dayNightCycle != null)
+        {
+            dayNightCycle.Changed += RefreshDay;
+        }
+
+        RefreshDay();
+    }
+
     public void SetObjective(string text)
     {
         if (objectiveText != null)
@@ -112,11 +161,20 @@ public sealed class UIController : MonoBehaviour
         messageUntil = Time.unscaledTime + duration;
     }
 
+    public void ShowDeath(bool visible)
+    {
+        if (deathPanel != null)
+        {
+            deathPanel.SetActive(visible);
+        }
+    }
+
     private void RefreshInventory()
     {
         int stone = inventory != null ? inventory.Stone : 0;
-        int glowCrystal = inventory != null ? inventory.GlowCrystal : 0;
-        int rootFiber = inventory != null ? inventory.RootFiber : 0;
+        int wood = inventory != null ? inventory.Wood : 0;
+        int food = inventory != null ? inventory.Food : 0;
+        int herbs = inventory != null ? inventory.Herbs : 0;
 
         if (stoneText != null)
         {
@@ -125,24 +183,45 @@ public sealed class UIController : MonoBehaviour
 
         if (glowCrystalText != null)
         {
-            glowCrystalText.text = "Glow Crystal: " + glowCrystal;
+            glowCrystalText.text = "Wood: " + wood;
         }
 
         if (rootFiberText != null)
         {
-            rootFiberText.text = "Root Fiber: " + rootFiber;
+            rootFiberText.text = "Food: " + food + " | Herbs: " + herbs;
         }
     }
 
     private void RefreshCraftedInventory()
     {
-        int torches = craftedInventory != null ? craftedInventory.Torches : 0;
-        int markers = craftedInventory != null ? craftedInventory.StoneMarkers : 0;
-        int shards = craftedInventory != null ? craftedInventory.CrystalKeyShards : 0;
+        int spears = craftedInventory != null ? craftedInventory.StoneSpears : 0;
+        int bandages = craftedInventory != null ? craftedInventory.Bandages : 0;
+        int campfires = craftedInventory != null ? craftedInventory.Campfires : 0;
+        int bedrolls = craftedInventory != null ? craftedInventory.Bedrolls : 0;
 
         if (craftedText != null)
         {
-            craftedText.text = "Torches: " + torches + " | Markers: " + markers + " | Shards: " + shards;
+            craftedText.text = "Spear: " + spears + " | Bandage: " + bandages + " | Campfire: " + campfires + " | Bedroll: " + bedrolls;
+        }
+    }
+
+    private void RefreshVitals()
+    {
+        if (vitalsText != null)
+        {
+            int health = vitals != null ? Mathf.RoundToInt(vitals.Health) : 0;
+            int hunger = vitals != null ? Mathf.RoundToInt(vitals.Hunger) : 0;
+            vitalsText.text = "Health: " + health + " | Hunger: " + hunger;
+        }
+    }
+
+    private void RefreshDay()
+    {
+        if (dayText != null)
+        {
+            int day = dayNightCycle != null ? dayNightCycle.CurrentDay : 1;
+            string phase = dayNightCycle != null ? dayNightCycle.CurrentPhase.ToString() : DayPhase.Day.ToString();
+            dayText.text = "Day " + day + " - " + phase;
         }
     }
 }
