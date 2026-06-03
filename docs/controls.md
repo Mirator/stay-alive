@@ -4,7 +4,7 @@ Status: Implemented
 
 ## Purpose
 
-Define the keyboard and mouse controls for the proof of concept.
+Define the keyboard and mouse controls for the cave baseline.
 
 ## Requirements
 

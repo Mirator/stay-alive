@@ -4,7 +4,7 @@ Status: Implemented
 
 ## Purpose
 
-Define MVP grid-based shelter building.
+Define wilderness build grid-based shelter building.
 
 ## Design Goal
 
@@ -14,7 +14,7 @@ Building should let the player create a small functional shelter without becomin
 
 ### 13.1 BLD-001: Grid Placement
 
-The MVP MUST use grid-based placement for shelter objects.
+The wilderness build MUST use grid-based placement for shelter objects.
 
 Acceptance criteria:
 
@@ -25,7 +25,7 @@ Acceptance criteria:
 
 ### 13.2 BLD-002: Required Build Pieces
 
-The MVP MUST include shelter basics.
+The wilderness build MUST include shelter basics.
 
 Required build pieces:
 
@@ -75,7 +75,7 @@ Acceptance criteria:
 - No multi-floor buildings.
 - No structural stability simulation.
 - No furniture decoration set beyond required shelter pieces.
-- No enemy base raiding requirement in MVP.
+- No enemy base raiding requirement in wilderness build.
 
 ## Public Interfaces
 
@@ -91,7 +91,7 @@ The implementation SHOULD expose this conceptual runtime contract:
 
 ## Verification
 
-Automated MVP tests verify:
+Automated wilderness build tests verify:
 
 - Valid placement succeeds and consumes cost.
 - Invalid placement fails and does not consume cost.

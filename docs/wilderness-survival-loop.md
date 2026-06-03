@@ -4,11 +4,11 @@ Status: Implemented
 
 ## Purpose
 
-Define the MVP survival loop after the cave proof of concept. The MVP moves Stay Alive outdoors into a wilderness sandbox with no winning condition.
+Define the wilderness build survival loop after the cave baseline. The wilderness build moves Stay Alive outdoors into a wilderness sandbox with no winning condition.
 
 ## Design Goal
 
-The MVP should answer:
+The wilderness build should answer:
 
 Can a player survive multiple days in the wild by gathering, crafting, building shelter, fighting or avoiding animals, and saving progress?
 
@@ -16,7 +16,7 @@ Can a player survive multiple days in the wild by gathering, crafting, building 
 
 ### 8.1 WSL-001: Outdoor Sandbox Start
 
-The MVP MUST start the player outdoors in a wilderness clearing.
+The wilderness build MUST start the player outdoors in a wilderness clearing.
 
 Acceptance criteria:
 
@@ -27,17 +27,17 @@ Acceptance criteria:
 
 ### 8.2 WSL-002: No Winning Condition
 
-The MVP MUST be a sandbox without a final victory state.
+The wilderness build MUST be a sandbox without a final victory state.
 
 Acceptance criteria:
 
 - The game does not end after reaching a location or completing a quest.
-- Surviving Day 3 is an MVP acceptance milestone, not a win state.
+- Surviving Day 3 is an wilderness acceptance milestone, not a win state.
 - After Day 3, the game continues with repeated or scaled survival pressure.
 
 ### 8.3 WSL-003: First 3 Day Target
 
-The MVP MUST support a playable first 3 in-game days.
+The wilderness build MUST support a playable first 3 in-game days.
 
 Acceptance criteria:
 
@@ -48,7 +48,7 @@ Acceptance criteria:
 
 ### 8.4 WSL-004: Core Repeating Loop
 
-The MVP loop MUST repeat without requiring authored route completion.
+The wilderness loop MUST repeat without requiring authored route completion.
 
 Loop stages:
 
@@ -70,8 +70,8 @@ Acceptance criteria:
 
 - No authored ending.
 - No cave progression route requirement.
-- No Ancient Door, Glow Crystal gate, or reward room requirement for MVP.
-- No procedural world requirement in the first MVP pass.
+- No Ancient Door, Glow Crystal gate, or reward room requirement for wilderness build.
+- No procedural world requirement in the first wilderness build pass.
 
 ## Dependencies
 
@@ -84,7 +84,7 @@ Acceptance criteria:
 
 ## Verification
 
-Automated MVP tests verify:
+Automated wilderness build tests verify:
 
 - A new game starts outdoors.
 - The player can gather at least one resource from spawn-adjacent wilderness content.

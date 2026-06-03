@@ -16,17 +16,19 @@ public sealed class SurvivalSaveSystem : MonoBehaviour
 
     private string storageRoot;
     private int activeSlot = 1;
+    private Vector3 startingPlayerPosition;
+    private bool hasStartingPlayerPosition;
 
     public static SurvivalSaveSystem Instance { get; private set; }
     public int ActiveSlot => activeSlot;
+    public event Action<int> Saved;
+    public event Action<int> Loaded;
 
     private void Awake()
     {
         Instance = this;
-        if (string.IsNullOrEmpty(storageRoot))
-        {
-            storageRoot = Path.Combine(Application.persistentDataPath, "StayAliveMvpSaves");
-        }
+        EnsureStorageRoot();
+        CaptureStartingPlayerPosition();
     }
 
     private void OnDestroy()
@@ -45,6 +47,7 @@ public sealed class SurvivalSaveSystem : MonoBehaviour
         vitals = playerVitals;
         dayNightCycle = cycle;
         buildingSystem = gridBuilding;
+        CaptureStartingPlayerPosition();
     }
 
     public void SetStorageRootForTests(string root)
@@ -60,9 +63,12 @@ public sealed class SurvivalSaveSystem : MonoBehaviour
         }
 
         activeSlot = slot;
+        EnsureStorageRoot();
         Directory.CreateDirectory(storageRoot);
         SaveSlotData data = Capture(slot);
         File.WriteAllText(SlotPath(slot), JsonUtility.ToJson(data, true));
+        Saved?.Invoke(slot);
+        UIController.Instance?.ShowSaveSlotView(GetSlotViewData(slot));
         return true;
     }
 
@@ -81,6 +87,8 @@ public sealed class SurvivalSaveSystem : MonoBehaviour
         activeSlot = slot;
         SaveSlotData data = JsonUtility.FromJson<SaveSlotData>(File.ReadAllText(SlotPath(slot)));
         Restore(data);
+        Loaded?.Invoke(slot);
+        UIController.Instance?.ShowSaveSlotView(GetSlotViewData(slot));
         return true;
     }
 
@@ -99,6 +107,33 @@ public sealed class SurvivalSaveSystem : MonoBehaviour
         return JsonUtility.FromJson<SaveSlotData>(File.ReadAllText(SlotPath(slot)));
     }
 
+    public SaveSlotViewData GetSlotViewData(int slot)
+    {
+        SaveSlotViewData view = new SaveSlotViewData
+        {
+            slotNumber = slot,
+            isOccupied = false,
+            displayName = string.Empty,
+            phaseOrTime = string.Empty,
+            timestamp = string.Empty,
+            playerSummary = string.Empty
+        };
+
+        SaveSlotData data = ReadSlot(slot);
+        if (data == null)
+        {
+            return view;
+        }
+
+        view.isOccupied = true;
+        view.displayName = string.IsNullOrEmpty(data.displayName) ? "Wilderness Save" : data.displayName;
+        view.day = data.day;
+        view.phaseOrTime = DayNightCycle.PhaseFromNormalizedTime(data.normalizedTime).ToString();
+        view.timestamp = data.savedAtUtc;
+        view.playerSummary = "Health " + Mathf.RoundToInt(data.health) + " | Hunger " + Mathf.RoundToInt(data.hunger);
+        return view;
+    }
+
     public bool StartNewGame(int slot)
     {
         if (!IsValidSlot(slot))
@@ -107,6 +142,7 @@ public sealed class SurvivalSaveSystem : MonoBehaviour
         }
 
         activeSlot = slot;
+        EnsureStorageRoot();
         Directory.CreateDirectory(storageRoot);
         string path = SlotPath(slot);
         if (File.Exists(path))
@@ -114,6 +150,8 @@ public sealed class SurvivalSaveSystem : MonoBehaviour
             File.Delete(path);
         }
 
+        ResetWorldState();
+        UIController.Instance?.ShowSaveSlotView(GetSlotViewData(slot));
         return true;
     }
 
@@ -290,7 +328,70 @@ public sealed class SurvivalSaveSystem : MonoBehaviour
 
     private string SlotPath(int slot)
     {
+        EnsureStorageRoot();
         return Path.Combine(storageRoot, "slot-" + slot + ".json");
+    }
+
+    private void CaptureStartingPlayerPosition()
+    {
+        if (!hasStartingPlayerPosition && player != null)
+        {
+            startingPlayerPosition = player.position;
+            hasStartingPlayerPosition = true;
+        }
+    }
+
+    private void ResetWorldState()
+    {
+        CaptureStartingPlayerPosition();
+        if (player != null && hasStartingPlayerPosition)
+        {
+            player.position = startingPlayerPosition;
+        }
+
+        if (vitals != null)
+        {
+            vitals.SetState(vitals.MaxHealth, vitals.MaxHunger);
+        }
+
+        if (dayNightCycle != null)
+        {
+            dayNightCycle.SetState(1, 0f);
+        }
+
+        resources?.ClearAll();
+        crafted?.ClearAll();
+        buildingSystem?.ClearPlacedBuildings();
+        RestoreHarvestedNodes(new List<string>());
+        ResetWildlife();
+        ResetObjectiveGuides();
+        UIController.Instance?.ShowDeath(false);
+    }
+
+    private static void ResetWildlife()
+    {
+        WildAnimalEnemy[] animals = FindObjectsByType<WildAnimalEnemy>(FindObjectsSortMode.None);
+        for (int i = 0; i < animals.Length; i++)
+        {
+            animals[i].ResetAnimal();
+        }
+    }
+
+    private static void ResetObjectiveGuides()
+    {
+        ObjectiveGuide[] guides = FindObjectsByType<ObjectiveGuide>(FindObjectsSortMode.None);
+        for (int i = 0; i < guides.Length; i++)
+        {
+            guides[i].ResetProgress();
+        }
+    }
+
+    private void EnsureStorageRoot()
+    {
+        if (string.IsNullOrEmpty(storageRoot))
+        {
+            storageRoot = Path.Combine(Application.persistentDataPath, "StayAliveSaves");
+        }
     }
 
     private static bool IsValidSlot(int slot)

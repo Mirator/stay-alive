@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public sealed class CraftingStation : MonoBehaviour, IInteractable
+public sealed class CraftingStation : MonoBehaviour, IInteractable, IInteractionPromptProvider
 {
     [SerializeField] private int selectedRecipeIndex;
 
@@ -45,6 +45,14 @@ public sealed class CraftingStation : MonoBehaviour, IInteractable
     public CraftedItemType CurrentOutput => CurrentRecipe.Output;
     public string Prompt => "Press E: craft " + CraftedInventory.Label(CurrentRecipe.Output) + " (" + CurrentRecipe.CostText + ")";
 
+    public InteractionPromptData GetPromptData(PlayerInteraction player)
+    {
+        ResourceInventory inventory = player != null ? player.Inventory : null;
+        RecipeViewData view = GetCurrentRecipeView(inventory, player != null ? player.CraftedInventory : null);
+        string reason = view.canCraft ? string.Empty : "Need " + view.MissingSummary;
+        return InteractionPromptData.Create("E", "Craft", CraftedInventory.Label(CurrentRecipe.Output), view.canCraft, reason);
+    }
+
     public void Interact(PlayerInteraction player)
     {
         ResourceInventory resourceInventory = player != null ? player.Inventory : null;
@@ -67,6 +75,7 @@ public sealed class CraftingStation : MonoBehaviour, IInteractable
         {
             UIController.Instance?.ShowMessage("No inventory available for crafting.", 1.7f);
             AdvanceRecipe();
+            UIController.Instance?.ShowRecipeView(GetCurrentRecipeView(resourceInventory, craftedInventory));
             return;
         }
 
@@ -75,6 +84,7 @@ public sealed class CraftingStation : MonoBehaviour, IInteractable
         {
             UIController.Instance?.ShowMessage("Need " + missingText + " for " + CraftedInventory.Label(recipe.Output) + ".", 2f);
             AdvanceRecipe();
+            UIController.Instance?.ShowRecipeView(GetCurrentRecipeView(resourceInventory, craftedInventory));
             return;
         }
 
@@ -87,6 +97,7 @@ public sealed class CraftingStation : MonoBehaviour, IInteractable
         craftedInventory.Add(recipe.Output, 1);
         UIController.Instance?.ShowMessage("Crafted " + CraftedInventory.Label(recipe.Output) + ".", 1.7f);
         AdvanceRecipe();
+        UIController.Instance?.ShowRecipeView(GetCurrentRecipeView(resourceInventory, craftedInventory));
     }
 
     public void SelectRecipe(CraftedItemType output)
@@ -114,6 +125,40 @@ public sealed class CraftingStation : MonoBehaviour, IInteractable
         }
     }
 
+    public RecipeViewData GetCurrentRecipeView(ResourceInventory resourceInventory, CraftedInventory craftedInventory)
+    {
+        CraftingRecipe recipe = CurrentRecipe;
+        RecipeViewData view = new RecipeViewData
+        {
+            recipeId = recipe.Output.ToString(),
+            resultLabel = CraftedInventory.Label(recipe.Output),
+            resultCount = craftedInventory != null ? craftedInventory.Get(recipe.Output) : 0
+        };
+
+        for (int i = 0; i < recipe.Costs.Length; i++)
+        {
+            ResourceCost cost = recipe.Costs[i];
+            int owned = resourceInventory != null ? resourceInventory.Get(cost.Type) : 0;
+            bool missing = owned < cost.Amount;
+            view.costs.Add(new ResourceCostViewData
+            {
+                resourceType = cost.Type.ToString(),
+                label = ResourceLabel(cost.Type),
+                required = cost.Amount,
+                owned = owned,
+                isMissing = missing
+            });
+
+            if (missing)
+            {
+                view.missingResources.Add((cost.Amount - owned) + " " + ResourceLabel(cost.Type));
+            }
+        }
+
+        view.canCraft = view.missingResources.Count == 0;
+        return view;
+    }
+
     private void AdvanceRecipe()
     {
         selectedRecipeIndex = (selectedRecipeIndex + 1) % Recipes.Length;
@@ -136,7 +181,7 @@ public sealed class CraftingStation : MonoBehaviour, IInteractable
         return missing.Count == 0;
     }
 
-    private static string ResourceLabel(ResourceType type)
+    public static string ResourceLabel(ResourceType type)
     {
         switch (type)
         {

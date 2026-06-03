@@ -4,7 +4,7 @@ Status: Implemented
 
 ## Purpose
 
-Define the runtime scripts and editor systems that support the proof-of-concept loop.
+Define the runtime scripts and editor systems that support the cave baseline loop.
 
 ## Requirements
 
@@ -14,7 +14,7 @@ The project MUST generate the playable scene from editor code.
 
 Acceptance criteria:
 
-- `StayAlivePrototypeBuilder` creates `Assets/Scenes/SampleScene.unity`.
+- `StayAliveCaveSceneBuilder` creates `Assets/Scenes/SampleScene.unity`.
 - The builder creates player, cave, mineables, door, reward goal, crafting station, enemy, UI, lights, camera, and core loop objects.
 - Regeneration is deterministic enough for tests to inspect named objects.
 
@@ -39,7 +39,7 @@ Acceptance criteria:
 
 ### 3.4 SYS-004: Inventory
 
-The inventory MUST store prototype resource counts.
+The inventory MUST store early build resource counts.
 
 Resources:
 
@@ -124,4 +124,4 @@ Acceptance criteria:
 
 ## Verification
 
-Covered by `StayAlivePrototypeTests` and `Logs/codex-unity-automation.json`.
+Covered by `StayAliveEditModeTests` and `Logs/codex-unity-automation.json`.

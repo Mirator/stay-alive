@@ -63,7 +63,13 @@ public sealed class WildAnimalEnemy : MonoBehaviour
             return;
         }
 
-        CurrentState = EvaluateState();
+        WildAnimalState nextState = EvaluateState();
+        if (nextState != CurrentState)
+        {
+            ShowStateFeedback(nextState);
+            CurrentState = nextState;
+        }
+
         if (body == null)
         {
             body = GetComponent<Rigidbody2D>();
@@ -164,6 +170,7 @@ public sealed class WildAnimalEnemy : MonoBehaviour
         if (defeated)
         {
             health = 0f;
+            UIController.Instance?.ShowMessage(animalType + " defeated.", 1.5f);
         }
         else if (health <= 0f)
         {
@@ -180,6 +187,51 @@ public sealed class WildAnimalEnemy : MonoBehaviour
         if (renderer != null)
         {
             renderer.color = defeated ? new Color(0.35f, 0.35f, 0.35f, 0.6f) : Color.white;
+        }
+    }
+
+    public void ResetAnimal()
+    {
+        if (body == null)
+        {
+            body = GetComponent<Rigidbody2D>();
+        }
+
+        health = maxHealth;
+        nextAttackTime = 0f;
+        CurrentState = WildAnimalState.Idle;
+        transform.position = homePosition;
+        if (body != null)
+        {
+            body.position = homePosition;
+        }
+
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            collider.enabled = true;
+        }
+
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        if (renderer != null)
+        {
+            renderer.color = Color.white;
+        }
+    }
+
+    private void ShowStateFeedback(WildAnimalState nextState)
+    {
+        if (nextState == WildAnimalState.Chasing)
+        {
+            UIController.Instance?.ShowMessage("Warning: wolf noticed you. Keep distance or use the spear.", 2.3f);
+        }
+        else if (nextState == WildAnimalState.Charging)
+        {
+            UIController.Instance?.ShowMessage("Warning: boar charging. Move away or strike first.", 2.3f);
+        }
+        else if (nextState == WildAnimalState.Attacking)
+        {
+            UIController.Instance?.ShowMessage(animalType + " is attacking.", 1.3f);
         }
     }
 }

@@ -4,7 +4,7 @@ Status: Implemented
 
 ## Purpose
 
-Define the first enemy system for Stay Alive. Enemies should add tension in dark areas without turning the prototype into a combat-heavy game.
+Define the first enemy system for Stay Alive. Enemies should add tension in dark areas without turning the early build into a combat-heavy game.
 
 ## Design Goal
 
@@ -89,7 +89,7 @@ Combat damage is not enabled in the first implemented pass.
 
 ## Verification
 
-Covered by `StayAlivePrototypeTests`:
+Covered by `StayAliveEditModeTests`:
 
 - Enemy spawns outside the safe room.
 - Enemy does not block the critical path.

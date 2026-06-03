@@ -2,7 +2,7 @@
 
 ## 1. High Concept
 
-**Stay Alive** is a small top-down 2D cave exploration prototype where the player controls a lone underground explorer who wakes up in a mysterious cavern, moves through a stylized environment, collects glowing resources, mines simple obstacles, and interacts with basic objects.
+**Stay Alive** is a small top-down 2D cave exploration early build where the player controls a lone underground explorer who wakes up in a mysterious cavern, moves through a stylized environment, collects glowing resources, mines simple obstacles, and interacts with basic objects.
 
 The first version focuses on **movement, atmosphere, exploration, and basic interaction**, not complex crafting or procedural generation.
 
@@ -10,7 +10,7 @@ The first version focuses on **movement, atmosphere, exploration, and basic inte
 
 ## 2. Genre
 
-**Top-down 2D exploration / light survival prototype**
+**Top-down 2D exploration / light survival early build**
 
 Primary player actions:
 
@@ -107,7 +107,7 @@ Possible character options:
 - Lantern or glowing crystal attached to belt
 - Short readable animations
 
-### Required animations for prototype
+### Required animations for early build
 
 | Animation | Purpose |
 |---|---|
@@ -120,11 +120,11 @@ Possible character options:
 
 ---
 
-## 6. Core Prototype Gameplay
+## 6. Core Early Build Gameplay
 
-### Prototype goal
+### Early Build goal
 
-The first prototype should answer one question:
+The first early build should answer one question:
 
 > Is it satisfying to walk around a small cave, interact with objects, and mine simple obstacles?
 
@@ -156,7 +156,7 @@ The first prototype should answer one question:
 
 ### Gamepad
 
-Not required for the first prototype.
+Not required for the first early build.
 
 ---
 
@@ -230,7 +230,7 @@ When a mineable object breaks, it can either:
 1. Add resources directly to inventory.
 2. Spawn a small pickup item.
 
-For the first prototype, use **direct collection**.
+For the first early build, use **direct collection**.
 
 ### Resource UI
 
@@ -275,7 +275,7 @@ Optional, but useful for atmosphere.
 
 - Press `Q` to place a torch at the player position.
 - Torch creates a small warm light.
-- Torch count can be unlimited in the prototype.
+- Torch count can be unlimited in the early build.
 
 ### Better version later
 
@@ -371,7 +371,7 @@ Use:
 
 Keep UI minimal.
 
-### Prototype UI
+### Cave UI
 
 Top-left corner:
 
@@ -472,7 +472,7 @@ Can Be Placed: Yes
 
 ---
 
-## 13. Prototype Scope
+## 13. Early Build Scope
 
 ## Must Have
 
@@ -503,7 +503,7 @@ Can Be Placed: Yes
 - Resource pickups
 - Main menu
 
-## Not For First Prototype
+## Not For First Early Build
 
 - Procedural generation
 - Full inventory
@@ -585,7 +585,7 @@ Includes:
 
 Goal:
 
-> The prototype has a clear visual mood.
+> The early build has a clear visual mood.
 
 Includes:
 

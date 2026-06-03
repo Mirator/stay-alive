@@ -91,7 +91,7 @@ Acceptance criteria:
 
 ## Verification
 
-Covered by `StayAlivePrototypeTests`:
+Covered by `StayAliveEditModeTests`:
 
 - `SceneContainsPlayableVerticalSlice`
 - `SceneHasMiningCrystalsDoorUiAndLights`

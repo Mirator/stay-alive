@@ -4,11 +4,11 @@ Status: Implemented
 
 ## Purpose
 
-Define the MVP survival pressure systems: health, hunger, day/night, and death.
+Define the wilderness build survival pressure systems: health, hunger, day/night, and death.
 
 ## Design Goal
 
-The player should feel pressure from time, hunger, and wildlife without turning the MVP into a punishing survival sim.
+The player should feel pressure from time, hunger, and wildlife without turning the wilderness build into a punishing survival sim.
 
 ## Requirements
 
@@ -56,7 +56,7 @@ Acceptance criteria:
 
 ### 10.4 VIT-004: Day/Night Cycle
 
-The MVP MUST have a day/night cycle.
+The wilderness build MUST have a day/night cycle.
 
 Acceptance criteria:
 
@@ -67,7 +67,7 @@ Acceptance criteria:
 
 ### 10.5 VIT-005: Death State
 
-The MVP MUST have a death state.
+The wilderness build MUST have a death state.
 
 Acceptance criteria:
 
@@ -77,9 +77,9 @@ Acceptance criteria:
 
 ## Non-Goals
 
-- No thirst meter in MVP.
-- No stamina meter in MVP.
-- No diseases, temperature, or weather survival in MVP.
+- No thirst meter in wilderness build.
+- No stamina meter in wilderness build.
+- No diseases, temperature, or weather survival in wilderness build.
 
 ## Public Interfaces
 
@@ -96,7 +96,7 @@ The implementation SHOULD expose these conceptual runtime contracts:
 
 ## Verification
 
-Automated MVP tests verify:
+Automated wilderness build tests verify:
 
 - Hunger decreases over time.
 - Food restores hunger.

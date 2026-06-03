@@ -4,17 +4,17 @@ Status: Implemented
 
 ## Purpose
 
-Define the MVP resource, gathering, crafting, and inventory model for outdoor wilderness survival.
+Define the wilderness resource, gathering, crafting, and inventory model for outdoor wilderness survival.
 
 ## Design Goal
 
-The MVP should use a compact resource set that supports survival, combat, and shelter building without a large crafting tree.
+The wilderness build should use a compact resource set that supports survival, combat, and shelter building without a large crafting tree.
 
 ## Requirements
 
-### 12.1 GCI-001: MVP Resource Set
+### 12.1 GCI-001: wilderness build Resource Set
 
-The MVP MUST use the minimal wilderness resource set.
+The wilderness build MUST use the minimal wilderness resource set.
 
 Required resources:
 
@@ -25,13 +25,13 @@ Required resources:
 
 Acceptance criteria:
 
-- `ResourceType` supports all required MVP resource values.
-- Cave-only resources are not required for MVP progression.
+- `ResourceType` supports all required wilderness resource values.
+- Cave-only resources are not required for wilderness progression.
 - Resource counters are visible in the UI or inventory view.
 
 ### 12.2 GCI-002: Gathering Sources
 
-The MVP MUST provide gatherable wilderness nodes.
+The wilderness build MUST provide gatherable wilderness nodes.
 
 Required sources:
 
@@ -48,7 +48,7 @@ Acceptance criteria:
 
 ### 12.3 GCI-003: Required Recipes
 
-The MVP MUST implement the core survival recipe set.
+The wilderness build MUST implement the core survival recipe set.
 
 Required recipes:
 
@@ -74,7 +74,7 @@ Acceptance criteria:
 
 ### 12.5 GCI-005: Inventory Scope
 
-The MVP inventory MUST remain simple but support resources, tools, and buildables.
+The wilderness build inventory MUST remain simple but support resources, tools, and buildables.
 
 Acceptance criteria:
 
@@ -99,7 +99,7 @@ Acceptance criteria:
 
 ## Verification
 
-Automated MVP tests verify:
+Automated wilderness build tests verify:
 
 - The player can gather Wood, Stone, Food, and Herbs.
 - Each required recipe succeeds with exact resources.

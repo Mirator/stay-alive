@@ -19,6 +19,14 @@ public sealed class PlayerInteraction : MonoBehaviour
 
     public ResourceInventory Inventory { get; private set; }
     public CraftedInventory CraftedInventory { get; private set; }
+    public PlayerVitals Vitals
+    {
+        get
+        {
+            EnsureCachedComponents();
+            return vitals;
+        }
+    }
 
     private void Awake()
     {
@@ -43,6 +51,14 @@ public sealed class PlayerInteraction : MonoBehaviour
         if (keyboard.escapeKey.wasPressedThisFrame)
         {
             TogglePause();
+        }
+
+        if (MainMenuController.Instance != null)
+        {
+            paused = MainMenuController.Instance.MainMenuVisible
+                || MainMenuController.Instance.PauseMenuVisible
+                || MainMenuController.Instance.OverwriteConfirmationVisible
+                || MainMenuController.Instance.DeathMenuVisible;
         }
 
         if (paused)
@@ -242,18 +258,37 @@ public sealed class PlayerInteraction : MonoBehaviour
         IInteractable interactable = FindNearestInteractable();
         if (interactable != null)
         {
-            UIController.Instance?.SetPrompt(interactable.Prompt, true);
+            IInteractionPromptProvider promptProvider = interactable as IInteractionPromptProvider;
+            UIController.Instance?.SetPrompt(promptProvider != null
+                ? promptProvider.GetPromptData(this)
+                : InteractionPromptData.FromLegacyPrompt(interactable.Prompt));
+
+            CraftingStation station = interactable as CraftingStation;
+            UIController.Instance?.ShowRecipeView(station != null ? station.GetCurrentRecipeView(Inventory, CraftedInventory) : null);
             return;
         }
 
         UIController.Instance?.SetPrompt(string.Empty, false);
+        UIController.Instance?.ShowRecipeView(null);
     }
 
     private void TogglePause()
     {
+        if (MainMenuController.Instance != null)
+        {
+            paused = MainMenuController.Instance.PauseMenuVisible;
+            MainMenuController.Instance.TogglePauseMenu();
+            paused = MainMenuController.Instance.PauseMenuVisible
+                || MainMenuController.Instance.MainMenuVisible
+                || MainMenuController.Instance.OverwriteConfirmationVisible
+                || MainMenuController.Instance.DeathMenuVisible;
+            return;
+        }
+
         paused = !paused;
         Time.timeScale = paused ? 0f : 1f;
         UIController.Instance?.SetPrompt(string.Empty, false);
+        UIController.Instance?.ShowPauseHelp(paused);
         UIController.Instance?.ShowMessage(paused ? "Paused" : "Back to the wild.", 1.2f);
     }
 

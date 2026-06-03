@@ -4,7 +4,7 @@ Status: Implemented
 
 ## Purpose
 
-Define MVP combat as simple melee survival against wild animals.
+Define wilderness build combat as simple melee survival against wild animals.
 
 ## Design Goal
 
@@ -14,7 +14,7 @@ Combat should add danger and recovery pressure while staying readable and lightw
 
 ### 11.1 MCW-001: Melee Survival Combat
 
-The MVP MUST use melee combat as the primary combat model.
+The wilderness build MUST use melee combat as the primary combat model.
 
 Acceptance criteria:
 
@@ -25,7 +25,7 @@ Acceptance criteria:
 
 ### 11.2 MCW-002: Stone Spear
 
-The MVP MUST include one reliable craftable melee weapon: `Stone Spear`.
+The wilderness build MUST include one reliable craftable melee weapon: `Stone Spear`.
 
 Acceptance criteria:
 
@@ -35,7 +35,7 @@ Acceptance criteria:
 
 ### 11.3 MCW-003: Wild Animal Enemy Contract
 
-The first MVP enemies MUST be wild animals.
+The first wilderness build enemies MUST be wild animals.
 
 Required enemy behaviors:
 
@@ -47,7 +47,7 @@ Required enemy behaviors:
 
 ### 11.4 MCW-004: Wildlife Types
 
-The MVP SHOULD include two wildlife patterns.
+The wilderness build SHOULD include two wildlife patterns.
 
 Required patterns:
 
@@ -72,7 +72,7 @@ Acceptance criteria:
 
 ## Non-Goals
 
-- No ranged combat in MVP.
+- No ranged combat in wilderness build.
 - No bosses.
 - No bandits or human enemies.
 - No enemy loot table requirement.
@@ -92,7 +92,7 @@ The implementation SHOULD expose these conceptual runtime contracts:
 
 ## Verification
 
-Automated MVP tests verify:
+Automated wilderness build tests verify:
 
 - `Stone Spear` can damage wildlife.
 - Wildlife notices and chases the player.

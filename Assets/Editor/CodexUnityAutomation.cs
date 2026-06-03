@@ -73,7 +73,7 @@ public static class CodexUnityAutomation
 
         try
         {
-            StayAliveMvpBuilder.BuildMvp();
+            StayAliveWildernessSceneBuilder.BuildWilderness();
             RunEditModeTests();
         }
         catch (Exception exception)
@@ -94,7 +94,7 @@ public static class CodexUnityAutomation
         Filter filter = new Filter
         {
             testMode = UnityEditor.TestTools.TestRunner.Api.TestMode.EditMode,
-            groupNames = new[] { "^StayAlivePrototypeTests" }
+            groupNames = new[] { "^StayAliveEditModeTests" }
         };
 
         ExecutionSettings settings = new ExecutionSettings(filter)
@@ -110,10 +110,10 @@ public static class CodexUnityAutomation
         TestRunnerApi.SaveResultToFile(result, XmlResultPath);
 
         int total = result.PassCount + result.FailCount + result.SkipCount + result.InconclusiveCount;
-        bool passed = result.FailCount == 0 && result.InconclusiveCount == 0 && result.PassCount >= 13;
+        bool passed = result.FailCount == 0 && result.InconclusiveCount == 0 && result.PassCount >= 18;
         string summary = passed
-            ? "MVP build completed and StayAlivePrototypeTests passed."
-            : "MVP build completed but one or more StayAlivePrototypeTests failed.";
+            ? "Wilderness and UX build completed and StayAliveEditModeTests passed."
+            : "Wilderness and UX build completed but one or more StayAliveEditModeTests failed.";
 
         WriteJsonResult(
             passed,

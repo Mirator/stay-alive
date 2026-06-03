@@ -10,7 +10,7 @@ Define the first crafting system for Stay Alive. Crafting should extend mining a
 
 Crafting should answer:
 
-Can gathered cave resources become useful survival tools while keeping the prototype readable and fast?
+Can gathered cave resources become useful survival tools while keeping the early build readable and fast?
 
 ## Requirements
 
@@ -81,7 +81,7 @@ Acceptance criteria:
 
 ## Verification
 
-Covered by `StayAlivePrototypeTests`:
+Covered by `StayAliveEditModeTests`:
 
 - Crafting succeeds with enough resources.
 - Crafting fails without enough resources.

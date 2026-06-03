@@ -12,7 +12,7 @@ public sealed class SurvivalGameController : MonoBehaviour
     private void Start()
     {
         UIController.Instance?.SetObjective("Survive in the wild. Gather, craft, build shelter, fight or avoid animals, and save at camp.");
-        UIController.Instance?.ShowMessage("Outdoor sandbox MVP: survive the first 3 days, then keep going.", 5f);
+        UIController.Instance?.ShowMessage("Outdoor sandbox: survive the first 3 days, then keep going.", 5f);
     }
 
     public void Configure(PlayerVitals vitals, DayNightCycle cycle)

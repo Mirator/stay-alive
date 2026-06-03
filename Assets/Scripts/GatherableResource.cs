@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public sealed class GatherableResource : MonoBehaviour, IInteractable
+public sealed class GatherableResource : MonoBehaviour, IInteractable, IInteractionPromptProvider
 {
     [SerializeField] private string gatherableId;
     [SerializeField] private ResourceType resourceType = ResourceType.Wood;
@@ -13,6 +13,11 @@ public sealed class GatherableResource : MonoBehaviour, IInteractable
     public int Amount => amount;
     public bool IsHarvested { get; private set; }
     public string Prompt => IsHarvested ? displayName + " depleted" : "Press E: gather " + displayName;
+
+    public InteractionPromptData GetPromptData(PlayerInteraction player)
+    {
+        return InteractionPromptData.Create("E", "Gather", displayName, !IsHarvested, "Depleted");
+    }
 
     public void Configure(string id, string newDisplayName, ResourceType type, int newAmount)
     {

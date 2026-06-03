@@ -12,6 +12,8 @@ public sealed class PlayerVitals : MonoBehaviour
     [SerializeField] private float foodRestore = 30f;
     [SerializeField] private float bandageHeal = 35f;
 
+    private bool hungerWarningShown;
+
     public event Action Changed;
 
     public float MaxHealth => maxHealth;
@@ -57,6 +59,16 @@ public sealed class PlayerVitals : MonoBehaviour
         }
 
         hunger = Mathf.Max(0f, hunger - hungerDrainPerSecond * seconds);
+        if (hunger <= maxHunger * 0.25f && !hungerWarningShown)
+        {
+            hungerWarningShown = true;
+            UIController.Instance?.ShowMessage("Hunger low: eat food soon.", 2.4f);
+        }
+        else if (hunger > maxHunger * 0.35f)
+        {
+            hungerWarningShown = false;
+        }
+
         if (hunger <= 0f)
         {
             ApplyDamage(starvationDamagePerSecond * seconds);
@@ -98,6 +110,11 @@ public sealed class PlayerVitals : MonoBehaviour
         }
 
         hunger = Mathf.Min(maxHunger, hunger + Mathf.Max(0f, amount));
+        if (hunger > maxHunger * 0.35f)
+        {
+            hungerWarningShown = false;
+        }
+
         Changed?.Invoke();
     }
 
@@ -123,8 +140,20 @@ public sealed class PlayerVitals : MonoBehaviour
         if (health <= 0f)
         {
             IsDead = true;
-            UIController.Instance?.ShowDeath(true);
+            if (MainMenuController.Instance != null)
+            {
+                MainMenuController.Instance.ShowDeathMenu();
+            }
+            else
+            {
+                UIController.Instance?.ShowDeath(true);
+            }
+
             UIController.Instance?.ShowMessage("You died. Load a save or return to menu.", 5f);
+        }
+        else if (amount > 0f)
+        {
+            UIController.Instance?.ShowMessage("Took damage. Health " + Mathf.RoundToInt(health) + ".", 1.5f);
         }
 
         Changed?.Invoke();

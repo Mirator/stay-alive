@@ -4,7 +4,7 @@ Status: Implemented
 
 ## Purpose
 
-Define the MVP outdoor world, content set, landmarks, and visual replacement for cave-specific content.
+Define the wilderness outdoor world, content set, landmarks, and visual replacement for cave-specific content.
 
 ## Design Goal
 
@@ -14,7 +14,7 @@ The wilderness should feel readable, buildable, and dangerous without requiring 
 
 ### 9.1 WWC-001: Handcrafted Outdoor Map
 
-The MVP MUST use a handcrafted outdoor map.
+The wilderness build MUST use a handcrafted outdoor map.
 
 Acceptance criteria:
 
@@ -25,7 +25,7 @@ Acceptance criteria:
 
 ### 9.2 WWC-002: Required Landmarks
 
-The MVP map MUST include the core survival landmarks.
+The wilderness map MUST include the core survival landmarks.
 
 Required landmarks:
 
@@ -45,7 +45,7 @@ Acceptance criteria:
 
 ### 9.3 WWC-003: Required Visual Set
 
-The MVP MUST generate or include sprites for the outdoor content set.
+The wilderness build MUST generate or include sprites for the outdoor content set.
 
 Required visual categories:
 
@@ -64,14 +64,14 @@ Required visual categories:
 
 ### 9.4 WWC-004: Cave Content Replacement
 
-MVP specs MUST NOT require cave-specific progression content.
+wilderness specs MUST NOT require cave-specific progression content.
 
 Acceptance criteria:
 
-- MVP progression does not depend on `GlowCrystal`.
-- MVP progression does not depend on `AncientDoor`.
-- MVP enemy requirements do not depend on `CaveCrawlerEnemy`.
-- Cave proof-of-concept content may remain in old specs or unused implementation paths.
+- wilderness progression does not depend on `GlowCrystal`.
+- wilderness progression does not depend on `AncientDoor`.
+- wilderness enemy requirements do not depend on `CaveCrawlerEnemy`.
+- Cave baseline content may remain in old specs or unused implementation paths.
 
 ## Non-Goals
 
@@ -87,9 +87,9 @@ Acceptance criteria:
 
 ## Verification
 
-Automated MVP tests verify:
+Automated wilderness build tests verify:
 
-- The generated MVP scene contains all required landmarks.
+- The generated wilderness build scene contains all required landmarks.
 - Outdoor sprites exist under `Assets/Art/Generated/Sprites`.
 - The spawn clearing has no hostile animal in immediate attack range.
 - The buildable area accepts basic grid placement.

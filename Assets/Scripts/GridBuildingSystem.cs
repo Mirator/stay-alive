@@ -62,6 +62,7 @@ public sealed class GridBuildingSystem : MonoBehaviour
         selectedType = type;
         hasSelection = true;
         UIController.Instance?.ShowMessage("Selected " + type + ".", 1f);
+        UIController.Instance?.ShowBuildPreview(GetPreviewState(transform.position));
     }
 
     public void RotateSelection()
@@ -70,6 +71,7 @@ public sealed class GridBuildingSystem : MonoBehaviour
         {
             doorRotated = !doorRotated;
             UIController.Instance?.ShowMessage("Door rotated.", 0.8f);
+            UIController.Instance?.ShowBuildPreview(GetPreviewState(transform.position));
         }
     }
 
@@ -77,6 +79,7 @@ public sealed class GridBuildingSystem : MonoBehaviour
     {
         hasSelection = false;
         UIController.Instance?.ShowMessage("Build canceled.", 0.8f);
+        UIController.Instance?.ShowBuildPreview(null);
     }
 
     public bool TryPlaceSelected(Vector2 worldPosition, out GameObject placedObject)
@@ -90,29 +93,65 @@ public sealed class GridBuildingSystem : MonoBehaviour
         EnsureInventories();
         placedObject = null;
         Vector2 snapped = Snap(worldPosition);
-        if (!IsValidPlacement(type, snapped))
+        string invalidReason = GetInvalidPlacementReason(type, snapped);
+        if (!string.IsNullOrEmpty(invalidReason))
         {
-            UIController.Instance?.ShowMessage("Cannot build there.", 1.2f);
+            UIController.Instance?.ShowMessage("Cannot build there: " + invalidReason + ".", 1.6f);
+            UIController.Instance?.ShowBuildPreview(GetPreviewState(type, snapped, rotated));
             return false;
         }
 
         if (!SpendCost(type))
         {
             UIController.Instance?.ShowMessage("Not enough materials for " + type + ".", 1.3f);
+            UIController.Instance?.ShowBuildPreview(GetPreviewState(type, snapped, rotated));
             return false;
         }
 
         placedObject = CreatePlacedObject(type, snapped, rotated, "build-" + nextBuildId++);
         UIController.Instance?.ShowMessage("Built " + type + ".", 1.2f);
+        UIController.Instance?.ShowBuildPreview(GetPreviewState(type, snapped, rotated));
         return true;
     }
 
     public bool IsValidPlacement(BuildableType type, Vector2 worldPosition)
     {
+        return string.IsNullOrEmpty(GetInvalidPlacementReason(type, worldPosition));
+    }
+
+    public BuildPreviewState GetPreviewState(Vector2 worldPosition)
+    {
+        return GetPreviewState(selectedType, worldPosition, selectedType == BuildableType.Door && doorRotated);
+    }
+
+    public BuildPreviewState GetPreviewState(BuildableType type, Vector2 worldPosition, bool rotated)
+    {
+        EnsureInventories();
+        Vector2 snapped = Snap(worldPosition);
+        string reason = GetInvalidPlacementReason(type, snapped);
+        if (string.IsNullOrEmpty(reason) && !CanAffordCost(type))
+        {
+            reason = "Need " + CostText(type);
+        }
+
+        return new BuildPreviewState
+        {
+            selectedBuildable = type,
+            selectedLabel = type.ToString(),
+            snappedPosition = snapped,
+            isValid = string.IsNullOrEmpty(reason),
+            invalidReason = reason,
+            costText = CostText(type),
+            rotated = rotated
+        };
+    }
+
+    public string GetInvalidPlacementReason(BuildableType type, Vector2 worldPosition)
+    {
         Vector2 snapped = Snap(worldPosition);
         if (!buildBounds.Contains(snapped))
         {
-            return false;
+            return "outside build area";
         }
 
         Collider2D[] overlaps = Physics2D.OverlapBoxAll(snapped, new Vector2(0.82f, 0.82f), 0f);
@@ -134,10 +173,10 @@ public sealed class GridBuildingSystem : MonoBehaviour
                 continue;
             }
 
-            return false;
+            return "blocked by " + DescribeOverlap(overlap);
         }
 
-        return true;
+        return string.Empty;
     }
 
     public List<SavePlacedBuildingData> CapturePlacedBuildings()
@@ -214,14 +253,18 @@ public sealed class GridBuildingSystem : MonoBehaviour
         if (keyboard.rKey.wasPressedThisFrame) RotateSelection();
         if (keyboard.xKey.wasPressedThisFrame) CancelPlacement();
 
-        if (mouse != null && mouse.rightButton.wasPressedThisFrame && hasSelection)
+        if (mouse != null && hasSelection)
         {
             Camera camera = Camera.main;
             if (camera != null)
             {
                 Vector2 mousePosition = mouse.position.ReadValue();
                 Vector3 world = camera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, -camera.transform.position.z));
-                TryPlaceSelected(world, out _);
+                UIController.Instance?.ShowBuildPreview(GetPreviewState(world));
+                if (mouse.rightButton.wasPressedThisFrame)
+                {
+                    TryPlaceSelected(world, out _);
+                }
             }
         }
     }
@@ -318,6 +361,78 @@ public sealed class GridBuildingSystem : MonoBehaviour
             default:
                 return false;
         }
+    }
+
+    private bool CanAffordCost(BuildableType type)
+    {
+        EnsureInventories();
+        if (resources == null || crafted == null)
+        {
+            return false;
+        }
+
+        switch (type)
+        {
+            case BuildableType.Floor:
+                return resources.Has(ResourceType.Wood, 1);
+            case BuildableType.Wall:
+                return resources.Has(ResourceType.Wood, 2);
+            case BuildableType.Door:
+                return resources.Has(ResourceType.Wood, 2) && resources.Has(ResourceType.Stone, 1);
+            case BuildableType.Campfire:
+                return crafted.Has(CraftedItemType.Campfire, 1);
+            case BuildableType.Bedroll:
+                return crafted.Has(CraftedItemType.Bedroll, 1);
+            case BuildableType.StorageBox:
+                return crafted.Has(CraftedItemType.StorageBox, 1);
+            case BuildableType.Workbench:
+                return crafted.Has(CraftedItemType.Workbench, 1);
+            default:
+                return false;
+        }
+    }
+
+    private static string CostText(BuildableType type)
+    {
+        switch (type)
+        {
+            case BuildableType.Floor:
+                return "1 Wood";
+            case BuildableType.Wall:
+                return "2 Wood";
+            case BuildableType.Door:
+                return "2 Wood + 1 Stone";
+            case BuildableType.Campfire:
+                return "1 Campfire";
+            case BuildableType.Bedroll:
+                return "1 Bedroll";
+            case BuildableType.StorageBox:
+                return "1 Storage Box";
+            case BuildableType.Workbench:
+                return "1 Workbench";
+            default:
+                return "Unknown";
+        }
+    }
+
+    private static string DescribeOverlap(Collider2D overlap)
+    {
+        if (overlap.GetComponentInParent<GatherableResource>() != null)
+        {
+            return "resource";
+        }
+
+        if (overlap.GetComponentInParent<WildAnimalEnemy>() != null)
+        {
+            return "wildlife";
+        }
+
+        if (overlap.GetComponentInParent<BuildableObject>() != null)
+        {
+            return "building";
+        }
+
+        return string.IsNullOrEmpty(overlap.name) ? "terrain" : overlap.name;
     }
 
     private void EnsureInventories()

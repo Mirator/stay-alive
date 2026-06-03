@@ -4,13 +4,13 @@ Status: Implemented
 
 ## Purpose
 
-Define the evidence required to prove the current prototype works.
+Define the evidence required to prove the current early build works.
 
 ## Requirements
 
 ### 5.1 TEST-001: Edit-Mode Test Fixture
 
-The project MUST keep verification tests in `Assets/Editor/StayAlivePrototypeTests.cs`.
+The project MUST keep verification tests in `Assets/Editor/StayAliveEditModeTests.cs`.
 
 Acceptance criteria:
 
@@ -81,9 +81,9 @@ The automation MUST report at least 12 passing tests with:
 
 In Unity:
 
-1. Select `Stay Alive > Build Proof of Concept`.
+1. Select `Stay Alive > Build Cave Baseline`.
 2. Open Test Runner.
-3. Run `StayAlivePrototypeTests` in Edit Mode.
+3. Run `StayAliveEditModeTests` in Edit Mode.
 
 ## Non-Goals
 

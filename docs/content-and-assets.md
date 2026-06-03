@@ -4,7 +4,7 @@ Status: Implemented
 
 ## Purpose
 
-Define the content, generated assets, and map readability rules for the proof of concept.
+Define the content, generated assets, and map readability rules for the cave baseline.
 
 ## Requirements
 
@@ -20,7 +20,7 @@ Acceptance criteria:
 
 ### 4.2 ART-002: Required Sprite Set
 
-The builder MUST generate sprites for the current prototype objects.
+The builder MUST generate sprites for the current early build objects.
 
 Required sprite categories:
 
@@ -49,7 +49,7 @@ Acceptance criteria:
 
 ### 4.4 MAP-001: Handcrafted Map
 
-The prototype map MUST be handcrafted, not procedural.
+The early build map MUST be handcrafted, not procedural.
 
 Required route:
 
