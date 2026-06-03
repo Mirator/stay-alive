@@ -12707,7 +12707,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Load the current slot or return to slot selection.
+  m_Text: Load the current slot or return to the title menu.
 --- !u!222 &291358640
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -31191,10 +31191,10 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Paused
 
-    WASD move | Mouse aim | Left Click attack/gather/mine
+    WASD move | Mouse aim | Left Click attack/use tool
 
     E
-    interact/craft/save | F eat food | H use bandage
+    gather/interact/craft/save | F eat food | H use bandage
 
     1-7 choose build piece
     | Right Click place | R rotate door | X cancel

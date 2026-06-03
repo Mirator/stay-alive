@@ -64,7 +64,7 @@ The pause state SHOULD include a compact help overlay.
 
 Acceptance criteria:
 
-- The overlay lists current wilderness controls.
+- The overlay lists current wilderness controls from SPEC-020.
 - The overlay lists survival basics: gather, craft, build, save, eat, heal, and fight or avoid wildlife.
 - The overlay can be dismissed by resuming the game.
 - The overlay does not imply a win condition.
@@ -86,6 +86,7 @@ This spec does not require a new runtime type, but it depends on the view-data c
 - SPEC-011 Melee Combat And Wildlife.
 - SPEC-013 Grid Building.
 - SPEC-014 Save Slots And Menus.
+- SPEC-020 Wilderness Controls.
 - SPEC-017 HUD, Interaction, Crafting, And Building UX.
 
 ## Verification

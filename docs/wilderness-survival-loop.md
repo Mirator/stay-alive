@@ -4,7 +4,7 @@ Status: Implemented
 
 ## Purpose
 
-Define the wilderness build survival loop after the cave baseline. The wilderness build moves Stay Alive outdoors into a wilderness sandbox with no winning condition.
+Define the current wilderness survival loop. Stay Alive is now an outdoor wilderness sandbox with no winning condition; the older cave baseline is archived and is not current scope.
 
 ## Design Goal
 

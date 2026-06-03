@@ -1,26 +1,16 @@
 # Stay Alive Specs
 
-This folder is the spec source of truth for Stay Alive. The first seven specs describe the implemented cave baseline. Specs 008 through 015 describe the implemented outdoor wilderness sandbox. Specs 016 and later describe implemented UX and menu improvements.
+This folder is the active spec source of truth for Stay Alive. Specs 008 through 015 describe the implemented outdoor wilderness sandbox. Specs 016 and later describe implemented UX, menu, and control improvements.
+
+The earlier cave baseline documents are archived in [archive/cave-baseline/README.md](archive/cave-baseline/README.md). Archived documents are historical reference only and are not current scope.
 
 ## Spec Driven Development Rules
 
 - Specs are normative. Use `MUST`, `SHOULD`, and `MAY` deliberately.
-- Implemented requirements MUST have verification evidence in [testing.md](testing.md) or [testing-and-acceptance.md](testing-and-acceptance.md).
+- Implemented requirements MUST have verification evidence in [testing-and-acceptance.md](testing-and-acceptance.md).
 - Proposed requirements MUST be marked as proposed and must not be treated as implemented.
 - Code, scene generation, and tests should be changed only after the relevant spec is updated.
 - If implementation and docs disagree, update the spec first, then update implementation or tests.
-
-## Cave Baseline Specs
-
-| No. | ID | Spec | Status | File |
-| --- | --- | --- | --- | --- |
-| 1 | SPEC-001 | Core Game Loop | Implemented | [core-loop.md](core-loop.md) |
-| 2 | SPEC-002 | Controls | Implemented | [controls.md](controls.md) |
-| 3 | SPEC-003 | Runtime Systems | Implemented | [systems.md](systems.md) |
-| 4 | SPEC-004 | Content And Assets | Implemented | [content-and-assets.md](content-and-assets.md) |
-| 5 | SPEC-005 | Testing And Verification | Implemented | [testing.md](testing.md) |
-| 6 | SPEC-006 | Crafting | Implemented | [crafting.md](crafting.md) |
-| 7 | SPEC-007 | Enemies | Implemented | [enemies.md](enemies.md) |
 
 ## Wilderness Implemented Specs
 
@@ -35,7 +25,7 @@ This folder is the spec source of truth for Stay Alive. The first seven specs de
 | 14 | SPEC-014 | Save Slots And Menus | Implemented | [save-slots-and-menus.md](save-slots-and-menus.md) |
 | 15 | SPEC-015 | Testing And Acceptance | Implemented | [testing-and-acceptance.md](testing-and-acceptance.md) |
 
-## UX And Menu Implemented Specs
+## UX, Menu, And Controls Implemented Specs
 
 | No. | ID | Spec | Status | File |
 | --- | --- | --- | --- | --- |
@@ -43,6 +33,7 @@ This folder is the spec source of truth for Stay Alive. The first seven specs de
 | 17 | SPEC-017 | HUD, Interaction, Crafting, And Building UX | Implemented | [hud-interaction-crafting-building-ux.md](hud-interaction-crafting-building-ux.md) |
 | 18 | SPEC-018 | Feedback, Readability, And Accessibility | Implemented | [feedback-readability-accessibility.md](feedback-readability-accessibility.md) |
 | 19 | SPEC-019 | Game Menu Flow And States | Implemented | [game-menu-flow-and-states.md](game-menu-flow-and-states.md) |
+| 20 | SPEC-020 | Wilderness Controls | Implemented | [controls.md](controls.md) |
 
 ## Current Authoritative Scene
 
@@ -52,14 +43,6 @@ This folder is the spec source of truth for Stay Alive. The first seven specs de
 - Automation report: `Logs/codex-unity-automation.json`
 
 ## Current Implemented Loop
-
-The implemented cave baseline is:
-
-`Spawn -> Mine weak gate -> Mine 3 Glow Crystals -> Open Ancient Door -> Enter reward room -> Complete`
-
-The current build also includes Workbench crafting, crafted torch placement, and one light-sensitive Cave Crawler placed after the crystal chamber.
-
-## Current Wilderness Loop
 
 The implemented wilderness build is an outdoor wilderness sandbox:
 

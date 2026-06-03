@@ -634,7 +634,7 @@ public static class StayAliveWildernessSceneBuilder
         rect.pivot = new Vector2(0.5f, 0.5f);
         rect.sizeDelta = new Vector2(560f, 330f);
 
-        string help = "Paused\nWASD move | Mouse aim | Left Click attack/gather/mine\nE interact/craft/save | F eat food | H use bandage\n1-7 choose build piece | Right Click place | R rotate door | X cancel\nGather, craft, build, save, eat, heal, and avoid or fight wildlife.";
+        string help = "Paused\nWASD move | Mouse aim | Left Click attack/use tool\nE gather/interact/craft/save | F eat food | H use bandage\n1-7 choose build piece | Right Click place | R rotate door | X cancel\nGather, craft, build, save, eat, heal, and avoid or fight wildlife.";
         Text label = CreateUiText("Pause Help Text", panel.transform, font, help, new Vector2(0f, 30f), new Vector2(500f, 220f), 20, TextAnchor.MiddleCenter, Color.white);
         label.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         label.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
@@ -689,7 +689,7 @@ public static class StayAliveWildernessSceneBuilder
         label.rectTransform.anchorMax = new Vector2(0.5f, 1f);
         label.rectTransform.pivot = new Vector2(0.5f, 1f);
 
-        Text body = CreateUiText("Death Recovery Text", panel.transform, font, "Load the current slot or return to slot selection.", new Vector2(0f, -78f), new Vector2(390f, 44f), 18, TextAnchor.MiddleCenter, new Color(1f, 0.84f, 0.72f));
+        Text body = CreateUiText("Death Recovery Text", panel.transform, font, "Load the current slot or return to the title menu.", new Vector2(0f, -78f), new Vector2(390f, 44f), 18, TextAnchor.MiddleCenter, new Color(1f, 0.84f, 0.72f));
         body.rectTransform.anchorMin = new Vector2(0.5f, 1f);
         body.rectTransform.anchorMax = new Vector2(0.5f, 1f);
         body.rectTransform.pivot = new Vector2(0.5f, 1f);

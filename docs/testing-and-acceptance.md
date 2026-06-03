@@ -8,7 +8,7 @@ Define the verification bar for the outdoor wilderness sandbox.
 
 ## Design Goal
 
-The wilderness build should be considered ready when automated tests and manual smoke checks prove that the first 3 in-game days are playable without relying on the old cave progression.
+The wilderness build should be considered ready when automated tests and manual smoke checks prove that the first 3 in-game days are playable without relying on archived progression rules.
 
 ## Requirements
 
@@ -18,7 +18,8 @@ Tests or documentation checks SHOULD verify that wilderness specs are discoverab
 
 Acceptance criteria:
 
-- README lists cave baseline specs separately from implemented wilderness specs.
+- README lists current wilderness specs and UX, menu, and control specs as active scope.
+- README links the archived cave baseline outside the active spec tables.
 - `SPEC-008` through `SPEC-015` exist.
 - Wilderness specs are marked `Status: Implemented` once the implementation and acceptance tests exist.
 
@@ -91,7 +92,7 @@ The wilderness automation pass gate is active. The wilderness test suite MUST re
 - At least 18 passing edit-mode tests in `StayAliveEditModeTests`.
 - At least 5 passing play-mode tests in `StayAlivePlayModeTests`.
 - Coverage for all `TEST` requirements listed above.
-- Coverage for implemented UX specs `SPEC-016` through `SPEC-018`.
+- Coverage for implemented UX, menu, and control specs `SPEC-016` through `SPEC-020`.
 
 ## Non-Goals
 
@@ -111,3 +112,5 @@ The wilderness automation pass gate is active. The wilderness test suite MUST re
 - SPEC-016 First-Session Onboarding And Guidance.
 - SPEC-017 HUD, Interaction, Crafting, And Building UX.
 - SPEC-018 Feedback, Readability, And Accessibility.
+- SPEC-019 Game Menu Flow And States.
+- SPEC-020 Wilderness Controls.

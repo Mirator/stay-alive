@@ -415,15 +415,19 @@ public sealed class StayAliveEditModeTests
     public void SpecsIndexMarksWildernessImplemented()
     {
         string readme = File.ReadAllText(Path.Combine("docs", "README.md"));
-        for (int spec = 1; spec <= 15; spec++)
+        for (int spec = 8; spec <= 15; spec++)
         {
             Assert.IsTrue(readme.Contains("SPEC-" + spec.ToString("000")));
         }
 
-        Assert.IsTrue(readme.Contains("Cave Baseline Specs"));
         Assert.IsTrue(readme.Contains("Wilderness Implemented Specs"));
+        Assert.IsTrue(readme.Contains("archive/cave-baseline/README.md"));
         Assert.IsTrue(readme.Contains("SPEC-008 | Wilderness Survival Loop | Implemented"));
         Assert.IsTrue(readme.Contains("SPEC-015 | Testing And Acceptance | Implemented"));
+
+        string archiveIndex = Path.Combine("docs", "archive", "cave-baseline", "README.md");
+        Assert.IsTrue(File.Exists(archiveIndex));
+        Assert.IsTrue(File.ReadAllText(archiveIndex).Contains("Status: Archived"));
 
         string[] wildernessDocs =
         {
@@ -442,17 +446,25 @@ public sealed class StayAliveEditModeTests
             string content = File.ReadAllText(Path.Combine("docs", wildernessDocs[i]));
             Assert.IsTrue(content.Contains("Status: Implemented"), wildernessDocs[i] + " is not marked implemented.");
         }
+
+        string saveMenusSpec = File.ReadAllText(Path.Combine("docs", "save-slots-and-menus.md"));
+        Assert.IsTrue(saveMenusSpec.Contains("The first visible menu state is the title menu."));
+        Assert.IsTrue(saveMenusSpec.Contains("Save slots are not shown on the initial title menu."));
+        Assert.IsTrue(saveMenusSpec.Contains("New Game opens save-slot selection in New Game mode."));
+        Assert.IsTrue(saveMenusSpec.Contains("Load Game opens save-slot selection in Load Game mode."));
+        Assert.IsFalse(saveMenusSpec.Contains("The main menu displays " + "3 save slots."));
     }
 
     [Test]
     public void SpecsIndexListsUxAndMenuAsImplemented()
     {
         string readme = File.ReadAllText(Path.Combine("docs", "README.md"));
-        Assert.IsTrue(readme.Contains("UX And Menu Implemented Specs"));
+        Assert.IsTrue(readme.Contains("UX, Menu, And Controls Implemented Specs"));
         Assert.IsTrue(readme.Contains("SPEC-016 | First-Session Onboarding And Guidance | Implemented"));
         Assert.IsTrue(readme.Contains("SPEC-017 | HUD, Interaction, Crafting, And Building UX | Implemented"));
         Assert.IsTrue(readme.Contains("SPEC-018 | Feedback, Readability, And Accessibility | Implemented"));
         Assert.IsTrue(readme.Contains("SPEC-019 | Game Menu Flow And States | Implemented"));
+        Assert.IsTrue(readme.Contains("SPEC-020 | Wilderness Controls | Implemented"));
 
         AssertImplementedUxSpec(
             "first-session-onboarding-and-guidance.md",
@@ -506,6 +518,23 @@ public sealed class StayAliveEditModeTests
                 "Save-slot selection",
                 "Death Menu"
             });
+
+        AssertImplementedUxSpec(
+            "controls.md",
+            "SPEC-020",
+            new[]
+            {
+                "WASD",
+                "Mouse position sets the aim direction",
+                "Left Click",
+                "E` gathers wilderness resource nodes",
+                "F` consumes one `Food` item",
+                "H` consumes one `Bandage`",
+                "Right Click",
+                "R` rotates the selected Door preview",
+                "X` cancels the active build selection",
+                "Esc` opens the pause menu"
+            });
     }
 
     [Test]
@@ -519,6 +548,16 @@ public sealed class StayAliveEditModeTests
         Assert.IsNotNull(GameObject.Find("Build UX"));
         Assert.IsNotNull(GameObject.Find("Save Slot UX"));
         Assert.IsNotNull(FindAnyGameObject("Pause Help Panel"));
+        Text pauseHelp = FindAnyGameObject("Pause Help Text").GetComponent<Text>();
+        Assert.IsTrue(pauseHelp.text.Contains("WASD move"));
+        Assert.IsTrue(pauseHelp.text.Contains("Left Click attack/use tool"));
+        Assert.IsTrue(pauseHelp.text.Contains("E gather/interact/craft/save"));
+        Assert.IsTrue(pauseHelp.text.Contains("F eat food"));
+        Assert.IsTrue(pauseHelp.text.Contains("H use bandage"));
+        Assert.IsTrue(pauseHelp.text.Contains("1-7 choose build piece"));
+        Assert.IsTrue(pauseHelp.text.Contains("Right Click place"));
+        Assert.IsTrue(pauseHelp.text.Contains("R rotate door"));
+        Assert.IsTrue(pauseHelp.text.Contains("X cancel"));
         Assert.IsNotNull(GameObject.Find("Game Main Menu Panel"));
         Assert.IsNotNull(GameObject.Find("Title Menu Panel"));
         Assert.IsNotNull(GameObject.Find("Continue Button").GetComponent<GameMenuButton>());

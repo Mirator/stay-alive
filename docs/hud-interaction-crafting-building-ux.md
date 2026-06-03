@@ -87,6 +87,7 @@ The implementation SHOULD expose these conceptual view-data contracts:
 - SPEC-013 Grid Building.
 - SPEC-014 Save Slots And Menus.
 - SPEC-016 First-Session Onboarding And Guidance.
+- SPEC-020 Wilderness Controls.
 
 ## Verification
 
